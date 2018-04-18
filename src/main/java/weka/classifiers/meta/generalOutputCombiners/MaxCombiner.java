@@ -39,6 +39,7 @@ public class MaxCombiner extends GeneralCombiner {
 	@Override
 	public double[] getCombinedDistributionForInstance(double[][] rawPredictions, Instance testInstance,
 			double[] weights) throws Exception {
+		this.checkCompatibility(rawPredictions, testInstance, weights);
 		int numClasses = testInstance.numClasses();
 		double[] prediction = new double[numClasses];
 		Arrays.fill(prediction, -Double.MAX_VALUE);

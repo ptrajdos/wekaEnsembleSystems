@@ -34,7 +34,7 @@ public abstract class GeneralCombiner implements OutputCombiner,Serializable {
 		int numClasses = testInstance.numClasses();
 		if(rawPredictions[0].length != numClasses)
 			throw new Exception("Test instance and the rawPredictions are incompatible");
-		if(numClasses != weights.length)
+		if(rawPredictions.length != weights.length)
 			throw new Exception("Test instance and the weights are incompatible");
 	}
 	

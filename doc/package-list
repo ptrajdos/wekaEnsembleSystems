@@ -1,2 +1,4 @@
+weka.classifiers
 weka.classifiers.meta.customizableBagging
 weka.classifiers.meta.generalOutputCombiners
+weka.classifiers.tools
