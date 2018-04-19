@@ -3,10 +3,10 @@
  */
 package weka.classifiers.meta.customizableBagging;
 
-import java.util.Collections;
 import java.util.Enumeration;
 import java.util.Vector;
 
+import weka.classifiers.Classifier;
 import weka.classifiers.IteratedSingleClassifierEnhancer;
 import weka.classifiers.meta.generalOutputCombiners.MeanCombiner;
 import weka.classifiers.meta.generalOutputCombiners.MeanCombinerNumClass;
@@ -52,7 +52,8 @@ public class OutputCombinerGeneralBased extends OutputCombinerBase {
 	@Override
 	public double[] getDistributionForInstance(IteratedSingleClassifierEnhancer itClassifier, Instance instance)
 			throws Exception {
-		double[][] responses = OutputExtractorIteratedSingleClassifierEnhancer.getDistributions(itClassifier, instance);
+		Classifier[] committee = CommitteeExtractorIteratedSingleClassifierEnhancer.getCommittee(itClassifier);
+		double[][] responses = CommitteeResponseExtractor.distributionsForInstanceCommittee(committee, instance);
 		double[] distribution = this.classCombiner.getCombinedDistributionForInstance(responses, instance);
 		return distribution;
 	}
@@ -62,7 +63,8 @@ public class OutputCombinerGeneralBased extends OutputCombinerBase {
 	 */
 	@Override
 	public double getClass(IteratedSingleClassifierEnhancer itClassifier, Instance instance) throws Exception {
-		double[] responses = OutputExtractorIteratedSingleClassifierEnhancer.getClasses(itClassifier, instance);
+		Classifier[] committee = CommitteeExtractorIteratedSingleClassifierEnhancer.getCommittee(itClassifier);
+		double[] responses = CommitteeResponseExtractor.classifyCommitee(committee, instance);
 		double result = this.regCombiner.getClass(responses, instance);
 		return result;
 	}

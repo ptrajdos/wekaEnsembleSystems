@@ -8,13 +8,10 @@ import java.util.Collections;
 import java.util.Enumeration;
 import java.util.Vector;
 
-import weka.classifiers.meta.Bagging;
+import weka.classifiers.Classifier;
 import weka.classifiers.meta.customizableBagging.OutputCombiner;
 import weka.classifiers.meta.customizableBagging.OutputCombinerGeneralBased;
-import weka.core.DistanceFunction;
-import weka.core.EuclideanDistance;
 import weka.core.Instance;
-import weka.core.NormalizableDistance;
 import weka.core.Option;
 import weka.core.OptionHandler;
 import weka.core.RevisionUtils;
@@ -171,9 +168,6 @@ public class CustomizableBagging extends Bagging {
 	    return options.toArray(new String[0]);
 	    
 	}
-
-	
-	
 	
 	
 	

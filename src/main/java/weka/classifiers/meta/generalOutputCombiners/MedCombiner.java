@@ -5,10 +5,6 @@ package weka.classifiers.meta.generalOutputCombiners;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.LinkedList;
-import java.util.List;
 
 import weka.classifiers.tools.Pair;
 import weka.classifiers.tools.StatsUtils;
