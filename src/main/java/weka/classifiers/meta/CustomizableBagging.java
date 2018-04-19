@@ -9,6 +9,7 @@ import weka.classifiers.meta.Bagging;
 import weka.classifiers.meta.customizableBagging.OutputCombiner;
 import weka.classifiers.meta.customizableBagging.OutputCombinerGeneralBased;
 import weka.core.Instance;
+import weka.core.RevisionUtils;
 
 /**
  * @author pawel
@@ -77,6 +78,16 @@ public class CustomizableBagging extends Bagging {
 	 */
 	public void setOutCombiner(OutputCombiner outCombiner) {
 		this.outCombiner = outCombiner;
+	}
+
+
+
+	/* (non-Javadoc)
+	 * @see weka.classifiers.meta.Bagging#getRevision()
+	 */
+	@Override
+	public String getRevision() {
+		return RevisionUtils.extract("$Revision: 1$");
 	}
 
 	

@@ -4,6 +4,7 @@
 package weka.classifiers.meta.generalOutputCombiners;
 
 import weka.core.Instance;
+import weka.core.RevisionUtils;
 import weka.core.Utils;
 
 /**
@@ -55,6 +56,11 @@ public class MeanCombiner extends GeneralCombiner {
 		
 		this.normalizeOutput(finalPrediction);
 		return finalPrediction;
+	}
+
+	@Override
+	public String getRevision() {
+		return RevisionUtils.extract("$Revision: 1$");
 	}
 
 }

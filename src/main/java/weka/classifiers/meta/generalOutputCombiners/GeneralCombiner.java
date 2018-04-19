@@ -6,13 +6,14 @@ package weka.classifiers.meta.generalOutputCombiners;
 import java.io.Serializable;
 
 import weka.core.Instance;
+import weka.core.RevisionHandler;
 import weka.core.Utils;
 
 /**
  * @author pawel
  *
  */
-public abstract class GeneralCombiner implements OutputCombiner,Serializable {
+public abstract class GeneralCombiner implements OutputCombiner,Serializable, RevisionHandler {
 
 	/**
 	 * 

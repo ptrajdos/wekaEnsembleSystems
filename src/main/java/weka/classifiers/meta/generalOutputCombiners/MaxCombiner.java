@@ -6,6 +6,7 @@ package weka.classifiers.meta.generalOutputCombiners;
 import java.util.Arrays;
 
 import weka.core.Instance;
+import weka.core.RevisionUtils;
 
 /**
  * @author pawel
@@ -51,6 +52,11 @@ public class MaxCombiner extends GeneralCombiner {
 		
 		this.normalizeOutput(prediction);
 		return prediction;
+	}
+
+	@Override
+	public String getRevision() {
+		return RevisionUtils.extract("$Revision: 1$");
 	}
 
 }

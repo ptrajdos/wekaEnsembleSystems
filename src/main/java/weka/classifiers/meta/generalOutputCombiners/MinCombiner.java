@@ -6,6 +6,7 @@ package weka.classifiers.meta.generalOutputCombiners;
 import java.util.Arrays;
 
 import weka.core.Instance;
+import weka.core.RevisionUtils;
 
 /**
  * @author pawel
@@ -50,6 +51,11 @@ public class MinCombiner extends GeneralCombiner {
 		}
 		this.normalizeOutput(predictions);
 		return predictions;
+	}
+
+	@Override
+	public String getRevision() {
+		return RevisionUtils.extract("$Revision: 1$");
 	}
 
 }

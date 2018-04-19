@@ -13,6 +13,7 @@ import java.util.List;
 import weka.classifiers.tools.Pair;
 import weka.classifiers.tools.StatsUtils;
 import weka.core.Instance;
+import weka.core.RevisionUtils;
 import weka.core.Utils;
 
 
@@ -67,6 +68,11 @@ public class MedCombiner extends GeneralCombiner {
 		
 		this.normalizeOutput(prediction);
 		return prediction;
+	}
+
+	@Override
+	public String getRevision() {
+		return RevisionUtils.extract("$Revision: 1$");
 	}
 	
 	

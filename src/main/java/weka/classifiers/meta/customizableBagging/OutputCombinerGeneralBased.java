@@ -9,6 +9,7 @@ import weka.classifiers.meta.generalOutputCombiners.MeanCombinerNumClass;
 import weka.classifiers.meta.generalOutputCombiners.OutputCombiner;
 import weka.classifiers.meta.generalOutputCombiners.OutputCombinerNumClass;
 import weka.core.Instance;
+import weka.core.RevisionUtils;
 
 /**
  * @author pawel
@@ -87,6 +88,11 @@ public class OutputCombinerGeneralBased extends OutputCombinerBase {
 	 */
 	public void setRegCombiner(OutputCombinerNumClass regCombiner) {
 		this.regCombiner = regCombiner;
+	}
+
+	@Override
+	public String getRevision() {
+		return RevisionUtils.extract("$Revision: 1$");
 	}
 	
 
