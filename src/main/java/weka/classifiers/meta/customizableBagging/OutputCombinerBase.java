@@ -5,13 +5,14 @@ package weka.classifiers.meta.customizableBagging;
 
 import java.io.Serializable;
 
+import weka.core.OptionHandler;
 import weka.core.RevisionHandler;
 
 /**
  * @author pawel
  *
  */
-public abstract class OutputCombinerBase implements OutputCombiner, Serializable, RevisionHandler {
+public abstract class OutputCombinerBase implements OutputCombiner, Serializable, RevisionHandler,OptionHandler {
 
 	/**
 	 * 
