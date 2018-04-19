@@ -14,7 +14,7 @@
   <property name="src-test" value="src/test/java"/>
   <property name="lib" value="lib" />
   <property name="build" value="build"/>
-  <property name="dist"  value="./"/>
+  <property name="dist"  value="./dist"/>
   <property name="package"  value="wekaEnsembleSystems"/>
   <property name="doc"  value="doc"/>
   <property name="javac_max_memory" value="256m"/>

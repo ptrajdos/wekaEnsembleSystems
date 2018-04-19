@@ -39,8 +39,7 @@ public class MinCombiner extends GeneralCombiner {
 		int numClasses = testInstance.numClasses();
 		double[] predictions = new double[numClasses];
 		Arrays.fill(predictions, Double.MAX_VALUE);
-		
-		this.normalizeOutput(predictions);
+	
 		
 		for(int c =0;c<numClasses;c++){
 			for(int m=0;m<rawPredictions.length;m++){

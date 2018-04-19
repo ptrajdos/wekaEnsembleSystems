@@ -1,8 +1,14 @@
 /**
  * 
  */
-package weka.classifiers;
+package weka.classifiers.meta.customizableBagging;
 
+
+
+import java.lang.reflect.Field;
+
+import weka.classifiers.Classifier;
+import weka.classifiers.IteratedSingleClassifierEnhancer;
 import weka.core.Instance;
 
 /**
@@ -19,7 +25,9 @@ public class OutputExtractorIteratedSingleClassifierEnhancer {
 	}
 	public static double[][] getDistributions(IteratedSingleClassifierEnhancer itClassifier, Instance instance)
 			throws Exception{
-		Classifier[] classifiers = itClassifier.m_Classifiers;
+		Field f = IteratedSingleClassifierEnhancer.class.getDeclaredField("m_Classifiers");
+		f.setAccessible(true);
+		Classifier[] classifiers = (Classifier[]) f.get(itClassifier);
 		int numModels = classifiers.length;
 		
 		double[][] responses = new double[numModels][];
@@ -30,7 +38,9 @@ public class OutputExtractorIteratedSingleClassifierEnhancer {
 	}
 	
 	public static double[] getClasses(IteratedSingleClassifierEnhancer itClassifier, Instance instance) throws Exception {
-		Classifier[] classifiers = itClassifier.m_Classifiers;
+		Field f = IteratedSingleClassifierEnhancer.class.getDeclaredField("m_Classifiers");
+		f.setAccessible(true);
+		Classifier[] classifiers = (Classifier[]) f.get(itClassifier);;
 		int numModels = classifiers.length;
 		double[] classes = new double[numModels];
 		for(int m=0;m<numModels;m++){

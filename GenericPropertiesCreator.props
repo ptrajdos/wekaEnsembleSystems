@@ -1,0 +1,10 @@
+#Lists of combiners
+
+weka.classifiers.meta.customizableBagging.OutputCombiner=\
+ weka.classifiers.meta.customizableBagging
+
+weka.classifiers.meta.generalOutputCombiners.OutputCombiner=\
+ weka.classifiers.meta.generalOutputCombiners
+ 
+weka.classifiers.meta.generalOutputCombiners.OutputCombinerNumClass=\
+ weka.classifiers.meta.generalOutputCombiners

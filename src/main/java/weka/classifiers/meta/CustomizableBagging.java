@@ -1,11 +1,13 @@
 /**
  * 
  */
-package weka.classifiers.meta.customizableBagging;
+package weka.classifiers.meta;
 
 import java.lang.reflect.Field;
 
 import weka.classifiers.meta.Bagging;
+import weka.classifiers.meta.customizableBagging.OutputCombiner;
+import weka.classifiers.meta.customizableBagging.OutputCombinerGeneralBased;
 import weka.core.Instance;
 
 /**

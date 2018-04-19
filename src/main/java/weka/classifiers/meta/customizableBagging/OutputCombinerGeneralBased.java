@@ -4,7 +4,6 @@
 package weka.classifiers.meta.customizableBagging;
 
 import weka.classifiers.IteratedSingleClassifierEnhancer;
-import weka.classifiers.OutputExtractorIteratedSingleClassifierEnhancer;
 import weka.classifiers.meta.generalOutputCombiners.MeanCombiner;
 import weka.classifiers.meta.generalOutputCombiners.MeanCombinerNumClass;
 import weka.classifiers.meta.generalOutputCombiners.OutputCombiner;
