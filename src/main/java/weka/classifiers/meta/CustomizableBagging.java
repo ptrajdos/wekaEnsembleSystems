@@ -8,7 +8,6 @@ import java.util.Collections;
 import java.util.Enumeration;
 import java.util.Vector;
 
-import weka.classifiers.Classifier;
 import weka.classifiers.meta.customizableBagging.OutputCombiner;
 import weka.classifiers.meta.customizableBagging.OutputCombinerGeneralBased;
 import weka.core.Instance;
