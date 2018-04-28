@@ -32,29 +32,24 @@ public class CVParameterSelection_Customizable extends CVParameterSelection {
 		super();
 	}
 	
-	/**
-	 * Finds the best parameter combination. (recursive for each parameter
-	 * being optimised).
-	 * 
-	 * @param depth the index of the parameter to be optimised at this level
-	 * @param trainData the data the search is based on
-	 * @param random a random number generator
-	 * @throws Exception if an error occurs
-	 */
+	
+	
+	@Override
 	protected void findParamsByCrossValidation(int depth, Instances trainData,
 						     Random random)
 	  throws Exception {
+		
 
-	  if (depth < m_CVParams.size()) {
-	    CVParameter cvParam = (CVParameter)m_CVParams.elementAt(depth);
+	  if (depth < this.m_CVParams.size()) {
+	    CVParameter cvParam = (CVParameter)this.m_CVParams.elementAt(depth);
 
 	    double upper;
 	    switch ((int)(this.getParamLowerBound(cvParam) - this.getParamUpperBound(cvParam) + 0.5)) {
 	    case 1:
-		upper = m_NumAttributes;
+		upper = this.m_NumAttributes;
 		break;
 	    case 2:
-		upper = m_TrainFoldSize;
+		upper = this.m_TrainFoldSize;
 		break;
 	    default:
 		upper = this.getParamUpperBound(cvParam);
@@ -62,47 +57,54 @@ public class CVParameterSelection_Customizable extends CVParameterSelection {
 	    }
 	    double increment = (upper - this.getParamLowerBound(cvParam)) / (this.getParamSteps(cvParam) - 1);
 	    double upp = this.getParamUpperBound(cvParam);
-	    double val = 0;
-	    for( val = this.getParamLowerBound(cvParam);val<=upp;val+=increment)
+	    
+	    this.setParamValue(cvParam, this.getParamLowerBound(cvParam));
+	    for(double val = this.getParamLowerBound(cvParam);val<=upp;val+=increment) {
+	    	this.setParamValue(cvParam, val);
 	    	findParamsByCrossValidation(depth + 1, trainData, random);
-	    //TODO set Vals
+	    }
+	    	
+	    
 	  } else {
 	    
 	    Evaluation evaluation = new Evaluation(trainData);
 
 	    // Set the classifier options
 	    String [] options = createOptions();
-	    if (m_Debug) {
+	    if (this.m_Debug) {
 		System.err.print("Setting options for " 
-				 + m_Classifier.getClass().getName() + ":");
+				 + this.m_Classifier.getClass().getName() + ":");
 		for (int i = 0; i < options.length; i++) {
 		  System.err.print(" " + options[i]);
 		}
 		System.err.println("");
 	    }
-	    ((OptionHandler)m_Classifier).setOptions(options);
-	    for (int j = 0; j < m_NumFolds; j++) {
+	    ((OptionHandler)this.m_Classifier).setOptions(options);
+	    for (int j = 0; j < this.m_NumFolds; j++) {
 
 	      // We want to randomize the data the same way for every 
 	      // learning scheme.
-		Instances train = trainData.trainCV(m_NumFolds, j, new Random(1));
-		Instances test = trainData.testCV(m_NumFolds, j);
-		m_Classifier.buildClassifier(train);
+		Instances train = trainData.trainCV(this.m_NumFolds, j, new Random(1));
+		Instances test = trainData.testCV(this.m_NumFolds, j);
+		this.m_Classifier.buildClassifier(train);
 		evaluation.setPriors(train);
-		evaluation.evaluateModel(m_Classifier, test);
+		evaluation.evaluateModel(this.m_Classifier, test);
 	    }
 	    double error = this.qualitCalc.getQuality(evaluation);
-	    if (m_Debug) {
+	    if (this.m_Debug) {
 		System.err.println("Cross-validated error rate: " 
-				   + Utils.doubleToString(error, 6, 4));
+				   + Utils.doubleToString(error, 6, 4));//TODO error is zero?
 	    }
-	    if ((m_BestPerformance == -99) || (error < m_BestPerformance)) {
+	    if ((this.m_BestPerformance == -99) || (error < this.m_BestPerformance)) {
 		
-		m_BestPerformance = error;
-		m_BestClassifierOptions = createOptions();
+		this.m_BestPerformance = error;
+		this.m_BestClassifierOptions = createOptions();
 	    }
 	  }
+	  
 	}
+
+	
 		
 	protected Class getCVParameterClass(){
 		Class class1=null;
@@ -131,7 +133,7 @@ public class CVParameterSelection_Customizable extends CVParameterSelection {
 	}
 	
 	protected void setAccField(CVParameter param, String fieldName, Object value) {
-		Class cl = this.getCVParameterClass();
+		Class<?> cl = this.getCVParameterClass();
 		Field f = null;
 		try {
 			f = cl.getDeclaredField(fieldName);
@@ -189,8 +191,8 @@ public class CVParameterSelection_Customizable extends CVParameterSelection {
 	}
 	
 	protected boolean getParamAddAtEnd(CVParameter param) {
-		boolean val = (Boolean) this.getParamFieldByName(param, "m_AddAtEnd");
-		return val;
+		Boolean val = (Boolean) this.getParamFieldByName(param, "m_AddAtEnd");
+		return val.booleanValue();
 	}
 	
 	protected void setParamAddAtEnd(CVParameter param, boolean value) {
@@ -198,8 +200,8 @@ public class CVParameterSelection_Customizable extends CVParameterSelection {
 	}
 	
 	protected boolean getParamRoundParam(CVParameter param) {
-		boolean val = (Boolean) this.getParamFieldByName(param, "m_RoundParam");
-		return val;
+		Boolean val = (Boolean) this.getParamFieldByName(param, "m_RoundParam");
+		return val.booleanValue();
 	}
 	
 	protected void setParamRoundParam(CVParameter param, boolean value) {
@@ -211,6 +213,7 @@ public class CVParameterSelection_Customizable extends CVParameterSelection {
 	/**
 		* @return the qualitCalc
 		*/
+	
 		public QualityCalculator getQualitCalc() {
 			return this.qualitCalc;
 		}
@@ -218,6 +221,7 @@ public class CVParameterSelection_Customizable extends CVParameterSelection {
 		/**
 		 * @param qualitCalc the qualitCalc to set
 		 */
+	
 		public void setQualitCalc(QualityCalculator qualitCalc) {
 			this.qualitCalc = qualitCalc;
 		}

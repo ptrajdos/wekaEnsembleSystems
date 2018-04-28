@@ -135,7 +135,7 @@
   <!-- Put everything in ${build}/testcases into the ${package}-tests.jar file -->
   <target name="jar_tests" depends="compile_tests, init_dist"
    description="Creates a jar file with the test cases in ./dist. Run with -Dpackage=[package name]">
-    <jar jarfile="${dist}/${package}-tests.jar" 
+    <jar jarfile="${dist_weka}/${package}-tests.jar" 
       basedir="${build}/testcases">
     </jar>
   </target>

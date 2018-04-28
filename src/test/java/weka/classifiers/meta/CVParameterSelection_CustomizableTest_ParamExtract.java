@@ -23,6 +23,7 @@ public class CVParameterSelection_CustomizableTest_ParamExtract {
 		this.classifier.addCVParameter(KOptString);
 		
 	}
+	
 	@Test
 	public void testGetCVParameterClass() {	
 		Class cl = this.classifier.getCVParameterClass();
