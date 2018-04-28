@@ -107,7 +107,7 @@ public class CVParameterSelection_Customizable extends CVParameterSelection {
 	
 		
 	protected Class getCVParameterClass(){
-		Class class1=null;
+		Class<?> class1=null;
 		try {
 			class1 = Class.forName("weka.classifiers.meta.CVParameterSelection$CVParameter");
 		} catch (ClassNotFoundException e) {
@@ -216,6 +216,10 @@ public class CVParameterSelection_Customizable extends CVParameterSelection {
 	
 		public QualityCalculator getQualitCalc() {
 			return this.qualitCalc;
+		}
+		
+		public String qualityCalcTipText(){
+			return "Quality calculator for the " + this.getClass().toGenericString();
 		}
 
 		/**
