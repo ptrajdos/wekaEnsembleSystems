@@ -4,12 +4,16 @@
 package weka.classifiers.meta;
 
 import java.lang.reflect.Field;
+import java.util.Collections;
+import java.util.Enumeration;
 import java.util.Random;
+import java.util.Vector;
 
 import weka.classifiers.Evaluation;
 import weka.classifiers.meta.cvParameterSelectionCustomizable.ErrorRateQualityCalculator;
 import weka.classifiers.meta.cvParameterSelectionCustomizable.QualityCalculator;
 import weka.core.Instances;
+import weka.core.Option;
 import weka.core.OptionHandler;
 import weka.core.Utils;
 
@@ -218,7 +222,7 @@ public class CVParameterSelection_Customizable extends CVParameterSelection {
 			return this.qualitCalc;
 		}
 		
-		public String qualityCalcTipText(){
+		public String qualitCalcTipText(){
 			return "Quality calculator for the " + this.getClass().toGenericString();
 		}
 
@@ -230,6 +234,75 @@ public class CVParameterSelection_Customizable extends CVParameterSelection {
 			this.qualitCalc = qualitCalc;
 		}
 
+
+
+		/* (non-Javadoc)
+		 * @see weka.classifiers.meta.CVParameterSelection#setOptions(java.lang.String[])
+		 */
+		@Override
+		public void setOptions(String[] options) throws Exception {
+			String qualCalcString = Utils.getOption("QC", options);
+		    if(qualCalcString.length() != 0) {
+		      String combinerClassSpec[] = Utils.splitOptions(qualCalcString);
+		      if(combinerClassSpec.length == 0) { 
+		        throw new Exception("Invalid Quality calculator."); 
+		      }
+		      String className = combinerClassSpec[0];
+		      combinerClassSpec[0] = "";
+
+		      this.setQualitCalc(
+		                   (QualityCalculator) Utils.forName( QualityCalculator.class, 
+		                                 className, 
+		                                 combinerClassSpec)
+		                                        );
+		    }
+		    else 
+		      this.setQualitCalc(new ErrorRateQualityCalculator());
+			
+			super.setOptions(options);
+		}
+
+
+
+		/* (non-Javadoc)
+		 * @see weka.classifiers.meta.CVParameterSelection#getOptions()
+		 */
+		@Override
+		public String[] getOptions() {
+			Vector<String> options = new Vector<String>();
+		    
+
+		    options.add("-QC");
+		    String combinerOptions = (this.qualitCalc instanceof OptionHandler)? Utils.joinOptions(((OptionHandler)this.qualitCalc).getOptions()):"";
+		    options.add(this.qualitCalc.getClass().getName()+" "+combinerOptions); 
+		    
+		    Collections.addAll(options, super.getOptions());
+		    
+		    return options.toArray(new String[0]);
+		    
+		}
+
+
+
+		/* (non-Javadoc)
+		 * @see weka.classifiers.meta.CVParameterSelection#listOptions()
+		 */
+		@Override
+		public Enumeration<Option> listOptions() {
+			Vector<Option> newVector = new Vector<Option>(1);
+			
+			 newVector.addElement(new Option(
+				      "\tThe quality calculator to use"+
+			          "(default: "+ ErrorRateQualityCalculator.class.toGenericString() + ").\n",
+				      "QC", 0, "-QC"));
+			 
+			 newVector.addAll(Collections.list(super.listOptions()));
+			    
+			return newVector.elements();
+		}
+
+		
+		
 	
 
 }
