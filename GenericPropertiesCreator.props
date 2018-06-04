@@ -1,7 +1,7 @@
 #Lists of combiners
 
-weka.classifiers.meta.customizableBagging.OutputCombiner=\
- weka.classifiers.meta.customizableBagging
+weka.classifiers.meta.simpleVotingLikeCombiners.OutputCombiner=\
+ weka.classifiers.meta.simpleVotingLikeCombiners
 
 weka.classifiers.meta.generalOutputCombiners.OutputCombiner=\
  weka.classifiers.meta.generalOutputCombiners

@@ -1,7 +1,7 @@
 /**
  * 
  */
-package weka.classifiers.meta.customizableBagging;
+package weka.classifiers.meta.simpleVotingLikeCombiners;
 
 import java.io.Serializable;
 
@@ -19,12 +19,6 @@ public abstract class OutputCombinerBase implements OutputCombiner, Serializable
 	 */
 	private static final long serialVersionUID = 5941704616480304723L;
 
-	/**
-	 * 
-	 */
-	public OutputCombinerBase() {
-		// TODO Auto-generated constructor stub
-	}
 
 
 }

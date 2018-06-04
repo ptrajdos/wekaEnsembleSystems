@@ -1,17 +1,20 @@
 /**
  * 
  */
-package weka.classifiers.meta.customizableBagging;
+package weka.classifiers.meta.simpleVotingLikeCombiners;
 
 import java.util.Enumeration;
 import java.util.Vector;
 
 import weka.classifiers.Classifier;
 import weka.classifiers.IteratedSingleClassifierEnhancer;
+import weka.classifiers.MultipleClassifiersCombiner;
 import weka.classifiers.meta.generalOutputCombiners.MeanCombiner;
 import weka.classifiers.meta.generalOutputCombiners.MeanCombinerNumClass;
 import weka.classifiers.meta.generalOutputCombiners.OutputCombiner;
 import weka.classifiers.meta.generalOutputCombiners.OutputCombinerNumClass;
+import weka.classifiers.meta.tools.CommitteeExtractor;
+import weka.classifiers.meta.tools.CommitteeResponseExtractor;
 import weka.core.Instance;
 import weka.core.Option;
 import weka.core.OptionHandler;
@@ -32,18 +35,19 @@ public class OutputCombinerGeneralBased extends OutputCombinerBase {
 	/**
 	 * Combiner for class  soft outputs
 	 */
-	protected OutputCombiner classCombiner = new MeanCombiner();
+	protected OutputCombiner classCombiner ;
 	
 	/**
 	 * Combiner for regression outputs
 	 */
-	protected OutputCombinerNumClass regCombiner =  new MeanCombinerNumClass();
+	protected OutputCombinerNumClass regCombiner;
 
 	/**
 	 * 
 	 */
 	public OutputCombinerGeneralBased() {
-		// TODO Auto-generated constructor stub
+		this.regCombiner =  new MeanCombinerNumClass();
+		this.classCombiner = new MeanCombiner();
 	}
 
 	/* (non-Javadoc)
@@ -52,7 +56,7 @@ public class OutputCombinerGeneralBased extends OutputCombinerBase {
 	@Override
 	public double[] getDistributionForInstance(IteratedSingleClassifierEnhancer itClassifier, Instance instance)
 			throws Exception {
-		Classifier[] committee = CommitteeExtractorIteratedSingleClassifierEnhancer.getCommittee(itClassifier);
+		Classifier[] committee = CommitteeExtractor.getCommittee(itClassifier);
 		double[][] responses = CommitteeResponseExtractor.distributionsForInstanceCommittee(committee, instance);
 		double[] distribution = this.classCombiner.getCombinedDistributionForInstance(responses, instance);
 		return distribution;
@@ -63,12 +67,28 @@ public class OutputCombinerGeneralBased extends OutputCombinerBase {
 	 */
 	@Override
 	public double getClass(IteratedSingleClassifierEnhancer itClassifier, Instance instance) throws Exception {
-		Classifier[] committee = CommitteeExtractorIteratedSingleClassifierEnhancer.getCommittee(itClassifier);
+		Classifier[] committee = CommitteeExtractor.getCommittee(itClassifier);
 		double[] responses = CommitteeResponseExtractor.classifyCommitee(committee, instance);
 		double result = this.regCombiner.getClass(responses, instance);
 		return result;
 	}
 	
+	@Override
+	public double[] getDistributionForInstance(MultipleClassifiersCombiner classifier, Instance instance)
+			throws Exception {
+		Classifier[] committee = CommitteeExtractor.getCommittee(classifier);
+		double[][] responses = CommitteeResponseExtractor.distributionsForInstanceCommittee(committee, instance);
+		double[] distribution = this.classCombiner.getCombinedDistributionForInstance(responses, instance);
+		return distribution;
+	}
+
+	@Override
+	public double getClass(MultipleClassifiersCombiner classifier, Instance instance) throws Exception {
+		Classifier[] committee = CommitteeExtractor.getCommittee(classifier);
+		double[] responses = CommitteeResponseExtractor.classifyCommitee(committee, instance);
+		double result = this.regCombiner.getClass(responses, instance);
+		return result;
+	}
 	
 
 	/**
@@ -118,11 +138,11 @@ public class OutputCombinerGeneralBased extends OutputCombinerBase {
 		
 		 newVector.addElement(new Option(
 			      "\t Class distribution-combining-object to use "+
-		          "(default: weka.classifiers.meta.generalOutputCombiners.MeanCombiner).\n",
+		          "(default:" + MeanCombiner.class.toGenericString() +").\n",
 			      "CC", 0, "-CC"));
 		 newVector.addElement(new Option(
 			      "\t Regresion combining-object to use "+
-		          "(default: weka.classifiers.meta.generalOutputCombiners.MeanCombiner).\n",
+		          "(default:" + MeanCombiner.class.toGenericString()   +").\n",
 			      "RC", 0, "-RC"));
 		 
 		    
@@ -186,6 +206,8 @@ public class OutputCombinerGeneralBased extends OutputCombinerBase {
 	    
 	    return options.toArray(new String[0]);
 	}
+
+	
 	
 
 }

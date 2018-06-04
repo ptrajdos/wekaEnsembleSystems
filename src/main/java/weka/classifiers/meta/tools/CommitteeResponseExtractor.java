@@ -1,7 +1,7 @@
 /**
  * 
  */
-package weka.classifiers.meta.customizableBagging;
+package weka.classifiers.meta.tools;
 
 import java.io.Serializable;
 

@@ -3,6 +3,7 @@
  */
 package weka.classifiers.meta.generalOutputCombiners;
 
+import weka.classifiers.Classifier;
 import weka.core.Instance;
 
 /**
@@ -30,4 +31,22 @@ public interface OutputCombiner {
 	 * @throws Exception
 	 */
 	public double[] getCombinedDistributionForInstance(double[][] rawPredictions, Instance testInstance,double[] weights)throws Exception;
+	
+	/**
+	 * Combines prediction of the classifiers constituting the committee
+	 * @param committee -- classifier committee
+	 * @param testInstance -- instance that is being classified
+	 * @return
+	 * @throws Exception
+	 */
+	public double[] getCombinedDistributionForInstance(Classifier[] committee, Instance testInstance)throws Exception;
+	
+	/**
+	 * Combines prediction of the classifiers constituting the committee
+	 * @param committee
+	 * @param testInstance
+	 * @return
+	 * @throws Exception
+	 */
+	public double[] getCombinedDistributionForInstance(Classifier[] committee, Instance testInstance, double[] weights)throws Exception;
 }

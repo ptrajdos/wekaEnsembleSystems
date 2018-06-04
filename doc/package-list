@@ -1,5 +1,6 @@
 weka.classifiers.meta
-weka.classifiers.meta.customizableBagging
 weka.classifiers.meta.cvParameterSelectionCustomizable
 weka.classifiers.meta.generalOutputCombiners
+weka.classifiers.meta.simpleVotingLikeCombiners
+weka.classifiers.meta.tools
 weka.classifiers.tools

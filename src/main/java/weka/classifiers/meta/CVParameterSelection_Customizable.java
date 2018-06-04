@@ -28,12 +28,13 @@ public class CVParameterSelection_Customizable extends CVParameterSelection {
 	 */
 	private static final long serialVersionUID = -3078263958163166348L;
 	
-	protected QualityCalculator qualitCalc = new ErrorRateQualityCalculator(); 
+	protected QualityCalculator qualitCalc; 
 	/**
 	 * 
 	 */
 	public CVParameterSelection_Customizable() {
 		super();
+		this.qualitCalc  = new ErrorRateQualityCalculator();
 	}
 	
 	

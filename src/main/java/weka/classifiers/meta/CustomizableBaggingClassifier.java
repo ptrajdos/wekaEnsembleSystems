@@ -8,8 +8,8 @@ import java.util.Collections;
 import java.util.Enumeration;
 import java.util.Vector;
 
-import weka.classifiers.meta.customizableBagging.OutputCombiner;
-import weka.classifiers.meta.customizableBagging.OutputCombinerGeneralBased;
+import weka.classifiers.meta.simpleVotingLikeCombiners.OutputCombiner;
+import weka.classifiers.meta.simpleVotingLikeCombiners.OutputCombinerGeneralBased;
 import weka.core.Instance;
 import weka.core.Option;
 import weka.core.OptionHandler;
@@ -27,7 +27,7 @@ public class CustomizableBaggingClassifier extends Bagging {
 	 */
 	private static final long serialVersionUID = 2418734202968291123L;
 	
-	protected OutputCombiner outCombiner = new OutputCombinerGeneralBased();
+	protected OutputCombiner outCombiner ;
 	
 	
 
@@ -36,6 +36,7 @@ public class CustomizableBaggingClassifier extends Bagging {
 	 */
 	public CustomizableBaggingClassifier() {
 		super();
+		this.outCombiner = new OutputCombinerGeneralBased();
 	}
 
 
@@ -109,8 +110,8 @@ public class CustomizableBaggingClassifier extends Bagging {
 		Vector<Option> newVector = new Vector<Option>(1);
 		
 		 newVector.addElement(new Option(
-			      "\tThe distance function to use "+
-		          "(default: weka.classifiers.meta.customizableBagging.OutputCombinerGeneralBased).\n",
+			      "\tThe Combiner object to use "+
+		          "(default:" + OutputCombinerGeneralBased.class.toGenericString() + ").\n",
 			      "C", 0, "-C"));
 		 
 		 newVector.addAll(Collections.list(super.listOptions()));
