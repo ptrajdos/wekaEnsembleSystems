@@ -1,0 +1,13 @@
+#Lists of combiners
+
+weka.classifiers.meta.simpleVotingLikeCombiners.OutputCombiner=\
+ weka.classifiers.meta.simpleVotingLikeCombiners
+
+weka.classifiers.meta.generalOutputCombiners.OutputCombiner=\
+ weka.classifiers.meta.generalOutputCombiners
+ 
+weka.classifiers.meta.generalOutputCombiners.OutputCombinerNumClass=\
+ weka.classifiers.meta.generalOutputCombiners
+ 
+weka.classifiers.meta.cvParameterSelectionCustomizable.QualityCalculator=\
+ weka.classifiers.meta.cvParameterSelectionCustomizable
