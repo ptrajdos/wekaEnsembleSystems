@@ -1,4 +1,4 @@
-<project name="wekaEnsembleSystems" default="compile" basedir=".">
+<project name="wekaEnsembleSystems" default="compile" basedir="." xmlns:ivy="antlib:org.apache.ivy.ant">
 <!-- 
   ===========================================================================
    Ant build file for weka a weka package. 
@@ -92,6 +92,13 @@
              link="http://weka.sourceforge.net/doc.dev/"
              maxmemory="256m"/>          
   </target> 
+  
+   <!-- ================================= 
+          target: resolve              
+         ================================= -->
+    <target name="resolve" description="--> retrieve dependencies with ivy">
+        <ivy:retrieve />
+    </target>
 
 
 <!--
@@ -137,6 +144,26 @@
     <jar jarfile="${dist}/${package}-tests.jar" 
       basedir="${build}/testcases">
     </jar>
+  </target>
+  
+  <!--
+  	Run unit tests
+  -->
+  
+  <target name="run_tests" depends="compile_tests, init_dist" description="Runs unit tests">
+  	<junit printsummary="on" haltonfailure="yes" fork="true">
+  		<classpath>
+			<path refid="project.class.path"/>
+         	<pathelement location="${build}/testcases"/>
+  		</classpath>
+  		<formatter type="brief" usefile="false" />
+
+        <batchtest>
+         	<fileset dir="${src-test}" includes="**/*Test.java" />
+        </batchtest>
+
+  	</junit>
+
   </target>
 
 <!--
