@@ -2,6 +2,9 @@
 
 weka.classifiers.meta.simpleVotingLikeCombiners.OutputCombiner=\
  weka.classifiers.meta.simpleVotingLikeCombiners
+ 
+weka.classifiers.meta.simpleVotingLikeCombiners.OutputCombinerBase=\
+ weka.classifiers.meta.simpleVotingLikeCombiners
 
 weka.classifiers.meta.generalOutputCombiners.OutputCombiner=\
  weka.classifiers.meta.generalOutputCombiners

@@ -1,5 +1,6 @@
 #generators
 weka.classifiers.meta.simpleVotingLikeCombiners.OutputCombiner=weka.gui.GenericObjectEditor
+weka.classifiers.meta.simpleVotingLikeCombiners.OutputCombinerBase=weka.gui.GenericObjectEditor
 weka.classifiers.meta.generalOutputCombiners.OutputCombiner=weka.gui.GenericObjectEditor
 weka.classifiers.meta.generalOutputCombiners.OutputCombinerNumClass=weka.gui.GenericObjectEditor
 weka.classifiers.meta.cvParameterSelectionCustomizable.QualityCalculator=weka.gui.GenericObjectEditor
