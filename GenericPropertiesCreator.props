@@ -2,6 +2,9 @@
 
 weka.classifiers.meta.simpleVotingLikeCombiners.OutputCombiner=\
  weka.classifiers.meta.simpleVotingLikeCombiners
+ 
+weka.classifiers.meta.simpleVotingLikeCombiners.OutputCombinerBase=\
+ weka.classifiers.meta.simpleVotingLikeCombiners
 
 weka.classifiers.meta.generalOutputCombiners.OutputCombiner=\
  weka.classifiers.meta.generalOutputCombiners
@@ -11,3 +14,7 @@ weka.classifiers.meta.generalOutputCombiners.OutputCombinerNumClass=\
  
 weka.classifiers.meta.cvParameterSelectionCustomizable.QualityCalculator=\
  weka.classifiers.meta.cvParameterSelectionCustomizable
+
+weka.classifiers.meta.distrNormalizer.INormalizer=\
+ weka.classifiers.meta.distrNormalizer
+
