@@ -17,6 +17,11 @@ import weka.core.UtilsPT;
 public class SoftMaxNormalizer implements INormalizer, Serializable {
 
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 5777209520573656994L;
+
 	@Override
 	public double[] normalize(double[] array) {
 		return UtilsPT.softMax(array);
