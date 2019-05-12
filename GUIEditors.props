@@ -4,3 +4,4 @@ weka.classifiers.meta.simpleVotingLikeCombiners.OutputCombinerBase=weka.gui.Gene
 weka.classifiers.meta.generalOutputCombiners.OutputCombiner=weka.gui.GenericObjectEditor
 weka.classifiers.meta.generalOutputCombiners.OutputCombinerNumClass=weka.gui.GenericObjectEditor
 weka.classifiers.meta.cvParameterSelectionCustomizable.QualityCalculator=weka.gui.GenericObjectEditor
+weka.classifiers.meta.distrNormalizer.INormalizer=weka.gui.GenericObjectEditor

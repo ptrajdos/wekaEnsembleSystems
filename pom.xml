@@ -7,7 +7,7 @@
   <groupId>com.github.ptrajdos</groupId>
   <artifactId>WekaEnsembleSystems</artifactId>
   <packaging>jar</packaging>
-  <version>1.0.0</version>
+  <version>1.1.0</version>
 
   <name>Weka Ensemble systems</name>
   <description> Weka implementation of the Ensemble systems for Weka </description>
@@ -68,6 +68,12 @@
       <version>[3.8.2,)</version>
       <type>test-jar</type>
       <scope>test</scope>
+    </dependency>
+
+    <dependency>
+        <groupId>com.github.ptrajdos</groupId>
+        <artifactId>WekaTools</artifactId>
+        <version>[0.7.0,)</version>
     </dependency>
 
   </dependencies>
@@ -228,6 +234,8 @@
                 <include>**/.attach_pid*</include>
                 <include>**/hs_err_pid*</include>
                 <include>src/test/resources/wekarefs/</include>
+                <include>doc/**</include>
+                <include>lib/**</include>
               </includes>
               <followSymlinks>false</followSymlinks>
             </fileset>

@@ -14,3 +14,7 @@ weka.classifiers.meta.generalOutputCombiners.OutputCombinerNumClass=\
  
 weka.classifiers.meta.cvParameterSelectionCustomizable.QualityCalculator=\
  weka.classifiers.meta.cvParameterSelectionCustomizable
+
+weka.classifiers.meta.distrNormalizer.INormalizer=\
+ weka.classifiers.meta.distrNormalizer
+
