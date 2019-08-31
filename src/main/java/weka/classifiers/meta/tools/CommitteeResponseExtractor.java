@@ -11,7 +11,9 @@ import weka.core.RevisionHandler;
 import weka.core.RevisionUtils;
 
 /**
- * @author pawel
+ * @author pawel trajdos
+ * @since 1.1.1
+ * @version 1.1.1
  *
  */
 public class CommitteeResponseExtractor implements Serializable, RevisionHandler {
@@ -43,7 +45,7 @@ public class CommitteeResponseExtractor implements Serializable, RevisionHandler
 
 	@Override
 	public String getRevision() {
-		return RevisionUtils.extract("$Revision: 1$");
+		return RevisionUtils.extract("$Revision: 1.1.1$");
 	}
 
 }

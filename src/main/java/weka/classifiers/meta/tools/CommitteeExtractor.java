@@ -12,7 +12,9 @@ import weka.classifiers.IteratedSingleClassifierEnhancer;
 import weka.classifiers.MultipleClassifiersCombiner;
 
 /**
- * @author pawel
+ * @author pawel trajdos
+ * @since 1.1.1
+ * @version 1.1.1
  *
  */
 public class CommitteeExtractor {

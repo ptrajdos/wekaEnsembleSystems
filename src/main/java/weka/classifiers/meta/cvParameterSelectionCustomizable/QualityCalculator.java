@@ -6,7 +6,9 @@ package weka.classifiers.meta.cvParameterSelectionCustomizable;
 import weka.classifiers.Evaluation;
 
 /**
- * @author pawel
+ * @author pawel trajdos
+ * @since 1.1.1
+ * @version 1.1.1
  *
  */
 public interface QualityCalculator {

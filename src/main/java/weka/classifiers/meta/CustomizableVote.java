@@ -7,10 +7,8 @@ import java.util.Collections;
 import java.util.Enumeration;
 import java.util.Vector;
 
-import weka.classifiers.Classifier;
 import weka.classifiers.meta.simpleVotingLikeCombiners.OutputCombiner;
 import weka.classifiers.meta.simpleVotingLikeCombiners.OutputCombinerGeneralBased;
-import weka.core.Capabilities;
 import weka.core.Instance;
 import weka.core.Option;
 import weka.core.OptionHandler;
@@ -18,7 +16,9 @@ import weka.core.RevisionUtils;
 import weka.core.Utils;
 
 /**
- * @author pawel
+ * @author pawel trajdos
+ * @since 1.1.1
+ * @version 1.1.1
  *
  */
 public class CustomizableVote extends Vote {

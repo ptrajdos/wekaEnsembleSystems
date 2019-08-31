@@ -8,7 +8,9 @@ import java.io.Serializable;
 import weka.classifiers.Evaluation;
 
 /**
- * @author pawel
+ * @author pawel trajdos
+ * @since 1.1.1
+ * @version 1.1.1
  *
  */
 public class ErrorRateQualityCalculator implements QualityCalculator, Serializable {

@@ -7,7 +7,9 @@ import weka.classifiers.Classifier;
 import weka.core.Instance;
 
 /**
- * @author pawel
+ * @author pawel trajdos
+ * @since 1.1.1
+ * @version 1.1.1
  *
  */
 public interface OutputCombiner {
