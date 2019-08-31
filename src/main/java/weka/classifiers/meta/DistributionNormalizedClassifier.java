@@ -7,7 +7,6 @@ import java.util.Collections;
 import java.util.Enumeration;
 import java.util.Vector;
 
-import weka.classifiers.Classifier;
 import weka.classifiers.SingleClassifierEnhancer;
 import weka.classifiers.meta.distrNormalizer.INormalizer;
 import weka.classifiers.meta.distrNormalizer.SumNormalizer;
