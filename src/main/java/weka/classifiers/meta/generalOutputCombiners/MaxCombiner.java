@@ -9,7 +9,9 @@ import weka.core.Instance;
 import weka.core.RevisionUtils;
 
 /**
- * @author pawel
+ * @author pawel trajdos
+ * @since 1.1.1
+ * @version 1.1.1
  *
  */
 public class MaxCombiner extends GeneralCombiner {

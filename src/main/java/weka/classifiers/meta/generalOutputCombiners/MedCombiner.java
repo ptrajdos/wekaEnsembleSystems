@@ -14,7 +14,9 @@ import weka.core.Utils;
 
 
 /**
- * @author pawel
+ * @author pawel trajdos
+ * @since 1.1.1
+ * @version 1.1.1
  *
  */
 public class MedCombiner extends GeneralCombiner {

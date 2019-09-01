@@ -7,6 +7,8 @@ import java.io.Serializable;
 
 /**
  * @author Pawel Trajdos
+ * @since 1.1.0
+ * @version 1.1.0
  * The class represents weighted values
  *
  */
