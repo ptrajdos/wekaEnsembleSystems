@@ -1,4 +1,5 @@
 weka.classifiers.meta
+weka.classifiers.meta.committees
 weka.classifiers.meta.cvParameterSelectionCustomizable
 weka.classifiers.meta.distrNormalizer
 weka.classifiers.meta.generalOutputCombiners
