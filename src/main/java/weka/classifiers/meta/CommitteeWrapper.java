@@ -1,12 +1,13 @@
 /**
  * 
  */
-package weka.classifiers.meta.committees;
+package weka.classifiers.meta;
 
 import java.lang.reflect.Field;
 
 import weka.classifiers.Classifier;
 import weka.classifiers.SingleClassifierEnhancer;
+import weka.classifiers.meta.committees.Committee;
 import weka.classifiers.meta.tools.CommitteeResponseExtractor;
 import weka.core.Capabilities;
 import weka.core.Instance;
@@ -25,6 +26,8 @@ public class CommitteeWrapper extends SingleClassifierEnhancer implements Commit
 	 * 
 	 */
 	private static final long serialVersionUID = -3648442079856127236L;
+	
+	
 	
 	/* (non-Javadoc)
 	 * @see weka.classifiers.Classifier#buildClassifier(weka.core.Instances)
@@ -102,6 +105,14 @@ public class CommitteeWrapper extends SingleClassifierEnhancer implements Commit
 	
 	public String globalInfo() {
 		return "Committee Wrapper for wrapping different classifiers.";
+	}
+	
+	/**
+	 * @param args
+	 */
+	public static void main(String[] args) {
+		runClassifier(new CommitteeWrapper(), args);
+
 	}
 
 }
