@@ -1,4 +1,4 @@
-package weka.classifiers.meta.committees;
+package weka.classifiers.meta;
 
 import junit.framework.Test;
 import junit.framework.TestSuite;
@@ -6,6 +6,7 @@ import weka.classifiers.AbstractClassifierTest;
 import weka.classifiers.CheckClassifier;
 import weka.classifiers.Classifier;
 import weka.classifiers.meta.Bagging;
+import weka.classifiers.meta.CommitteeWrapper;
 import weka.core.Instance;
 import weka.core.Instances;
 import weka.core.TestInstances;
