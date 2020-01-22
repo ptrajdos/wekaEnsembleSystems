@@ -79,7 +79,7 @@ public class UpdateableClassifierWithInitialBatchTest extends AbstractClassifier
 	    	 int trainingBatchSize = testClassifier.getInitialBatchSize();
 	    	 Random rnd = new Random(0);
 	    	 for(int i=0;i<trainingBatchSize;i++) {
-	    		 vals = new double[2]
+	    		 vals = new double[2];
 	    		 vals[0] = rnd.nextDouble();
 	    		 vals[1] = rnd.nextInt(numClasses);
 	    		 testInstance = new DenseInstance(1.0, vals);
