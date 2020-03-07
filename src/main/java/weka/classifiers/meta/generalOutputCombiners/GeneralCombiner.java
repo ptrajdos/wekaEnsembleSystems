@@ -14,7 +14,7 @@ import weka.core.Utils;
 /**
  * @author pawel trajdos
  * @since 1.1.1
- * @version 1.1.1
+ * @version 1.3.1
  *
  */
 public abstract class GeneralCombiner implements OutputCombiner,Serializable, RevisionHandler {
@@ -50,8 +50,7 @@ public abstract class GeneralCombiner implements OutputCombiner,Serializable, Re
 	 */
 	@Override
 	public String getRevision() {
-		// TODO Auto-generated method stub
-		return null;
+		return "1.3.1";
 	}
 
 	/* (non-Javadoc)

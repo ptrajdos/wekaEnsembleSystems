@@ -167,10 +167,10 @@ public class UpdateableClassifierWithInitialBatch extends SingleClassifierEnhanc
 	    
 
 	    options.add("-IBS");
-	    options.add(""+ this.initialBatchSize);
+	    options.add(""+ this.getInitialBatchSize());
 	    
 	    options.add("-RBS");
-	    options.add(""+this.regularBatchSize);
+	    options.add(""+this.getRegularBatchSize());
 	    
 	    Collections.addAll(options, super.getOptions());
 	    

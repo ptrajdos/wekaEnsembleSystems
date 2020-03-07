@@ -15,11 +15,12 @@ import weka.core.Option;
 import weka.core.OptionHandler;
 import weka.core.RevisionUtils;
 import weka.core.Utils;
+import weka.core.UtilsPT;
 
 /**
  * @author pawel trajdos
  * @since 1.1.1
- * @version 1.1.1
+ * @version 1.3.1
  *
  */
 public class CustomizableBaggingClassifier extends Bagging {
@@ -128,24 +129,8 @@ public class CustomizableBaggingClassifier extends Bagging {
 	 */
 	@Override
 	public void setOptions(String[] options) throws Exception {
-		String combinerString = Utils.getOption('C', options);
-	    if(combinerString.length() != 0) {
-	      String combinerClassSpec[] = Utils.splitOptions(combinerString);
-	      if(combinerClassSpec.length == 0) { 
-	        throw new Exception("Invalid Distance function " +
-	                            "specification string."); 
-	      }
-	      String className = combinerClassSpec[0];
-	      combinerClassSpec[0] = "";
-
-	      this.setOutCombiner(
-	                  (OutputCombiner) Utils.forName( OutputCombiner.class, 
-	                                 className, 
-	                                 combinerClassSpec)
-	                                        );
-	    }
-	    else 
-	      this.setOutCombiner(new OutputCombinerGeneralBased());
+		
+		this.setOutCombiner((OutputCombiner) UtilsPT.parseObjectOptions(options, "C", new OutputCombinerGeneralBased(), OutputCombiner.class));
 		
 		super.setOptions(options);
 		
@@ -162,8 +147,7 @@ public class CustomizableBaggingClassifier extends Bagging {
 	    
 
 	    options.add("-C");
-	    String combinerOptions = (this.outCombiner instanceof OptionHandler)? Utils.joinOptions(((OptionHandler)this.outCombiner).getOptions()):"";
-	    options.add(this.outCombiner.getClass().getName()+" "+combinerOptions); 
+	    options.add(UtilsPT.getClassAndOptions(this.getOutCombiner()));
 	    
 	    Collections.addAll(options, super.getOptions());
 	    

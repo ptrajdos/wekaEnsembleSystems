@@ -7,13 +7,16 @@ import java.util.Random;
 
 import weka.classifiers.AbstractClassifierTest;
 import weka.classifiers.Classifier;
+import weka.classifiers.bayes.NaiveBayesUpdateable;
 import weka.core.Attribute;
 import weka.core.DenseInstance;
 import weka.core.FastVector;
 import weka.core.Instance;
 import weka.core.Instances;
 import weka.core.Utils;
-import weka.datagenerators.clusterers.SubspaceCluster;
+import weka.tools.data.RandomDataGenerator;
+import weka.tools.tests.DistributionChecker;
+import weka.tools.tests.WekaGOEChecker;
 
 /**
  * @author pawel trajdos
@@ -99,8 +102,58 @@ public class UpdateableClassifierWithInitialBatchTest extends AbstractClassifier
 	     }
 	}
 	
-	
+	public void testTipTexts() {
+		WekaGOEChecker check = new WekaGOEChecker();
+		check.setObject(this.getClassifier());
+		assertTrue("Check Tip Texts", check.checkCallGlobalInfo());
+		assertTrue("Check Tip Texts", check.checkToolTipsCall());
+	}
 
+	public void testUpdateableTraining() {
+		this.updateableTest(getClassifier());
+		
+		UpdateableClassifierWithInitialBatch classifier = (UpdateableClassifierWithInitialBatch) this.getClassifier();
+		classifier.setClassifier(new NaiveBayesUpdateable());
+		this.updateableTest(classifier);
+		
+	}
+	
+	public void updateableTest(Classifier classifieru) {
+		RandomDataGenerator gen = new RandomDataGenerator();
+		Instances data = gen.generateData();
+		Instance testInstance = data.get(0);
+		UpdateableClassifierWithInitialBatch classifier = (UpdateableClassifierWithInitialBatch) classifieru;
+		classifier.setInitialBatchSize(10);
+		classifier.setRegularBatchSize(10);
+		
+		try {
+		for (Instance instance : data) {
+			classifier.updateClassifier(instance);
+			
+		}
+		double[] response = classifier.distributionForInstance(testInstance);
+		assertTrue("Batch update distribution check", DistributionChecker.checkDistribution(response));
+		}catch(Exception e) {
+			fail("Batch update. An exception has been caught: " + e.toString());
+		}
+	}
+	
+	public void testForceBatchFinish() {
+		RandomDataGenerator gen = new RandomDataGenerator();
+		Instances data = gen.generateData();
+		Instance testInstance = data.get(0);
+		UpdateableClassifierWithInitialBatch classifier = (UpdateableClassifierWithInitialBatch) this.getClassifier();
+		try {
+		for(int i=0;i<5;i++) {
+			classifier.updateClassifier(data.get(i));
+		}
+		classifier.batchFinished();
+		double[] response = classifier.distributionForInstance(testInstance);
+		assertTrue("Batch update distribution check", DistributionChecker.checkDistribution(response));
+		}catch(Exception e) {
+			fail("Force Batch Finish. Exception has been caught: " + e.toString());
+		}
+	}
 	
 
 }
