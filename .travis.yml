@@ -3,6 +3,8 @@ language: java
 jdk: oraclejdk8
 sudo: enabled 
 install: mvn install -DskipTests -Dgpg.skip
+after_success:
+  - mvn clean test jacoco:report coveralls:report
 notifications: 
  email:
   recipients: 
