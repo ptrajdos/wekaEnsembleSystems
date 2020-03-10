@@ -16,7 +16,7 @@ import weka.core.Utils;
 /**
  * @author pawel trajdos
  * @since 1.1.1
- * @version 1.1.1
+ * @version 1.3.1
  *
  */
 public class MedCombiner extends GeneralCombiner {
@@ -26,12 +26,7 @@ public class MedCombiner extends GeneralCombiner {
 	 */
 	private static final long serialVersionUID = 3655301700877487998L;
 
-	/**
-	 * 
-	 */
-	public MedCombiner() {
-		// TODO Auto-generated constructor stub
-	}
+
 
 	/* (non-Javadoc)
 	 * @see weka.classifiers.meta.generalOutputCombiners.OutputCombiner#getCombinedDistributionForInstance(double[][], weka.core.Instance)
@@ -59,7 +54,7 @@ public class MedCombiner extends GeneralCombiner {
 		for(int c=0;c<numClasses;c++){
 			valWeiList = new ArrayList<Pair>(numModels);
 			for(int m=0;m<numModels;m++){
-				valWeiList.add(new Pair(rawPredictions[m][c], weights[m]));
+				valWeiList.add(new Pair(rawPredictions[m][c], newWeights[m]));
 			}
 			prediction[c] = StatsUtils.weightedMedian(valWeiList);
 		}

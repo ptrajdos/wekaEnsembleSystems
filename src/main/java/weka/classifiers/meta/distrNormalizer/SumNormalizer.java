@@ -13,7 +13,7 @@ import weka.core.Utils;
  * @author pawel trajdos
  *
  * @since 1.1.0
- * @version 1.1.0
+ * @version 1.3.1
  */
 public class SumNormalizer implements INormalizer, Serializable {
 
@@ -30,7 +30,7 @@ public class SumNormalizer implements INormalizer, Serializable {
 		double sum = Utils.sum(array);
 		double[] tmp = Arrays.copyOf(array, array.length); 
 		if(! Utils.eq(0, sum)) {
-			Utils.normalize(array, sum);
+			Utils.normalize(tmp, sum);
 		}
 		return tmp;
 	}

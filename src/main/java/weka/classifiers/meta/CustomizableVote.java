@@ -14,11 +14,12 @@ import weka.core.Option;
 import weka.core.OptionHandler;
 import weka.core.RevisionUtils;
 import weka.core.Utils;
+import weka.core.UtilsPT;
 
 /**
  * @author pawel trajdos
  * @since 1.1.1
- * @version 1.1.1
+ * @version 1.3.1
  *
  */
 public class CustomizableVote extends Vote {
@@ -76,11 +77,11 @@ Vector<String> options = new Vector<String>();
 	    
 
 	    options.add("-C");
-	    String combinerOptions = (this.outCombiner instanceof OptionHandler)? Utils.joinOptions(((OptionHandler)this.outCombiner).getOptions()):"";
-	    options.add(this.outCombiner.getClass().getName()+" "+combinerOptions); 
+	    options.add(UtilsPT.getClassAndOptions(this.getOutCombiner()));
+	    
 	    
 	    options.add("-IC");
-	    String isCombining = (this.useCombiningObject? "1":"0");
+	    String isCombining = (this.isUseCombiningObject()? "1":"0");
 	    options.add(isCombining);
 	    
 	    
@@ -99,34 +100,12 @@ Vector<String> options = new Vector<String>();
 	 */
 	@Override
 	public void setOptions(String[] options) throws Exception {
-		String combinerString = Utils.getOption("IC", options);
-	   boolean decision=false;
-		if( combinerString.length() !=0) {
-			decision = Integer.parseInt(combinerString)>0? true:false;
-			this.setUseCombiningObject(decision);
-		}else {
-			this.setUseCombiningObject(false);
-		}
 		
-		 combinerString = Utils.getOption('C', options);
-	    if(combinerString.length() != 0) {
-	      String combinerClassSpec[] = Utils.splitOptions(combinerString);
-	      if(combinerClassSpec.length == 0) { 
-	        throw new Exception("Invalid Combiner object " +
-	                            "specification string."); 
-	      }
-	      String className = combinerClassSpec[0];
-	      combinerClassSpec[0] = "";
-
-	      this.setOutCombiner(
-	                  (OutputCombiner) Utils.forName( OutputCombiner.class, 
-	                                 className, 
-	                                 combinerClassSpec)
-	                                        );
-	    }
-	    else 
-	      this.setOutCombiner(new OutputCombinerGeneralBased());
+		this.setOutCombiner((OutputCombiner) UtilsPT.parseObjectOptions(options, "C", new OutputCombinerGeneralBased(), OutputCombiner.class));
 		
+		this.setUseCombiningObject(UtilsPT.parseIntegerOption(options, "IC", 0)==0? false:true);
+		
+				
 		super.setOptions(options);
 	}
 

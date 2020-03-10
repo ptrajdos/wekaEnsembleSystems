@@ -3,6 +3,8 @@ package weka.classifiers.meta;
 import junit.framework.Test;
 import junit.framework.TestSuite;
 import weka.classifiers.Classifier;
+import weka.tools.tests.RevisionChecker;
+import weka.tools.tests.WekaGOEChecker;
 
 public class CustomizableVoteTest extends VoteTest{
 
@@ -22,4 +24,16 @@ public class CustomizableVoteTest extends VoteTest{
 	  public static void main(String[] args){
 	    junit.textui.TestRunner.run(suite());
 	  }
+	  
+	  public void testRevisionHandler() {
+		  assertTrue("Check revision", RevisionChecker.checkRevision(this.getClassifier()));
+	  }
+	  
+	  public void testTipTexts() {
+		  WekaGOEChecker check = new WekaGOEChecker();
+		  check.setObject(this.getClassifier());
+		  assertTrue("Check Tip Texts", check.checkToolTipsCall());
+	  }
+	  
+	  
 }

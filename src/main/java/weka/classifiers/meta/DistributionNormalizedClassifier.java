@@ -19,7 +19,7 @@ import weka.core.UtilsPT;
  * Class for distribution normalizing wrapper
  * @author pawel trajdos
  * @since 1.1.0
- * @version 1.1.0
+ * @version 1.3.0
  *
  */
 public class DistributionNormalizedClassifier extends SingleClassifierEnhancer {
@@ -82,7 +82,7 @@ public class DistributionNormalizedClassifier extends SingleClassifierEnhancer {
 		Vector<String> options = new Vector<String>();
 		
 		options.add("-N");
-		options.add(UtilsPT.getClassAndOptions(normalizer));
+		options.add(UtilsPT.getClassAndOptions(this.getNormalizer()));
 		
 		
 		Collections.addAll(options, super.getOptions());

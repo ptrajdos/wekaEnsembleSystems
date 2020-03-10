@@ -2,14 +2,17 @@ package weka.classifiers.meta;
 
 import junit.framework.Test;
 import junit.framework.TestSuite;
+import weka.classifiers.AbstractClassifier;
 import weka.classifiers.AbstractClassifierTest;
 import weka.classifiers.CheckClassifier;
 import weka.classifiers.Classifier;
 import weka.classifiers.meta.Bagging;
 import weka.classifiers.meta.CommitteeWrapper;
+import weka.core.Capabilities;
 import weka.core.Instance;
 import weka.core.Instances;
 import weka.core.TestInstances;
+import weka.tools.tests.WekaGOEChecker;
 
 /**
  * Tests for {@link CommitteeWrapper}
@@ -77,6 +80,11 @@ public class CommitteeWrapperTest extends AbstractClassifierTest{
 				assertTrue("Class range", classPredictions[i] >=0 && classPredictions[i]<numClasses);
 			}
 			
+			double classVal = classifier.classifyInstance(testInstance);
+			
+			WekaGOEChecker check = new WekaGOEChecker();
+			check.setObject(classifier);
+			
 			
 			
 		} catch (Exception e) {
@@ -84,6 +92,21 @@ public class CommitteeWrapperTest extends AbstractClassifierTest{
 			fail("Exception has been caught");
 		}
 		  
+	  }
+	  
+	  public void testGlobalInfo() {
+		  WekaGOEChecker check = new WekaGOEChecker();
+		  check.setObject(getClassifier());
+		  
+		  assertTrue("Global infor check", check.checkCallGlobalInfo());
+		 
+		  
+	  }
+	  
+	  public void testCapabilities() {
+		  AbstractClassifier classifier = (AbstractClassifier) this.getClassifier();
+		  Capabilities caps = classifier.getCapabilities();
+		  assertTrue("Not null capabilities", caps!=null);
 	  }
 
 }

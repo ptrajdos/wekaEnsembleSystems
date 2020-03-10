@@ -20,11 +20,12 @@ import weka.core.Option;
 import weka.core.OptionHandler;
 import weka.core.RevisionUtils;
 import weka.core.Utils;
+import weka.core.UtilsPT;
 
 /**
  * @author pawel trajdos
  * @since 1.1.1
- * @version 1.1.1
+ * @version 1.3.1
  *
  */
 public class OutputCombinerGeneralBased extends OutputCombinerBase {
@@ -153,43 +154,11 @@ public class OutputCombinerGeneralBased extends OutputCombinerBase {
 
 	@Override
 	public void setOptions(String[] options) throws Exception {
-		String classCombinerString = Utils.getOption("CC", options);
-	    if(classCombinerString.length() != 0) {
-	      String combinerClassSpec[] = Utils.splitOptions(classCombinerString);
-	      if(combinerClassSpec.length == 0) { 
-	        throw new Exception("Invalid Class combiner."); 
-	      }
-	      String className = combinerClassSpec[0];
-	      combinerClassSpec[0] = "";
-
-	      this.setClassCombiner(
-	                   (OutputCombiner) Utils.forName( OutputCombiner.class, 
-	                                 className, 
-	                                 combinerClassSpec)
-	                                        );
-	    }
-	    else 
-	      this.setClassCombiner(new MeanCombiner());
+		
+		this.setClassCombiner((OutputCombiner) UtilsPT.parseObjectOptions(options, "CC", new MeanCombiner(), OutputCombiner.class));
+		
+		this.setRegCombiner((OutputCombinerNumClass) UtilsPT.parseObjectOptions(options, "RC", new MeanCombinerNumClass(), OutputCombinerNumClass.class));
 	    
-	    String regCombinerString = Utils.getOption("RC", options);
-	    if(regCombinerString.length() != 0) {
-	      String combinerClassSpec[] = Utils.splitOptions(regCombinerString);
-	      if(combinerClassSpec.length == 0) { 
-	        throw new Exception("Invalid Regresion Combiner."); 
-	      }
-	      String className = combinerClassSpec[0];
-	      combinerClassSpec[0] = "";
-
-	      this.setRegCombiner(
-	                   (OutputCombinerNumClass) Utils.forName( OutputCombinerNumClass.class, 
-	                                 className, 
-	                                 combinerClassSpec)
-	                                        );
-	    }
-	    else 
-	      this.setRegCombiner(new MeanCombinerNumClass());
-		
-		
 	}
 
 	@Override
@@ -198,12 +167,10 @@ public class OutputCombinerGeneralBased extends OutputCombinerBase {
 	    
 
 	    options.add("-CC");
-	    String combinerOptions = (this.classCombiner instanceof OptionHandler)? Utils.joinOptions(((OptionHandler)this.classCombiner).getOptions()):"";
-	    options.add(this.classCombiner.getClass().getName()+" "+combinerOptions); 
+	    options.add(UtilsPT.getClassAndOptions(this.getClassCombiner()));
 	    
 	    options.add("-RC");
-	    String regresionCombinerOptions = (this.regCombiner instanceof OptionHandler)? Utils.joinOptions(((OptionHandler)this.regCombiner).getOptions()):"";
-	    options.add(this.regCombiner.getClass().getName()+" "+regresionCombinerOptions);
+	    options.add(UtilsPT.getClassAndOptions(this.getRegCombiner()));
 	    
 	    
 	    return options.toArray(new String[0]);
