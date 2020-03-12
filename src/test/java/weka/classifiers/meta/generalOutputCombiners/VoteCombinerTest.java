@@ -1,11 +1,12 @@
 package weka.classifiers.meta.generalOutputCombiners;
 
-public class MinCombinerTest extends GeneralCombinerTest {
+public class VoteCombinerTest extends GeneralCombinerTest {
 
 	@Override
 	public OutputCombiner getCombiner() {
-		return new MinCombiner();
+		return new VoteCombiner();
 	}
+
 
 
 }

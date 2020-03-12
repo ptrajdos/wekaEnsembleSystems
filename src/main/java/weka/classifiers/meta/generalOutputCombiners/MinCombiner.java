@@ -22,19 +22,6 @@ public class MinCombiner extends GeneralCombiner {
 	private static final long serialVersionUID = 2519993314111855577L;
 
 
-	/* (non-Javadoc)
-	 * @see weka.classifiers.meta.generalOutputCombiners.OutputCombiner#getCombinedDistributionForInstance(double[][], weka.core.Instance)
-	 */
-	@Override
-	public double[] getCombinedDistributionForInstance(double[][] rawPredictions, Instance testInstance)
-			throws Exception {
-			int numModels = rawPredictions.length;
-			double[] weights = new double[numModels];
-			Arrays.fill(weights, 1.0);
-			
-		return this.getCombinedDistributionForInstance(rawPredictions, testInstance, weights);
-	}
-
 	@Override
 	public double[] getCombinedDistributionForInstance(double[][] rawPredictions, Instance testInstance,
 			double[] weights) throws Exception {

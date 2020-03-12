@@ -5,7 +5,6 @@ import java.util.Arrays;
 import junit.framework.TestCase;
 import weka.classifiers.Classifier;
 import weka.classifiers.functions.LinearRegression;
-import weka.classifiers.functions.Logistic;
 import weka.core.Instance;
 import weka.core.Instances;
 import weka.tools.SerialCopier;

@@ -1,9 +1,5 @@
 package weka.classifiers.meta.cvParameterSelectionCustomizable;
 
-import static org.junit.Assert.*;
-
-import org.junit.Test;
-
 import weka.classifiers.Evaluation;
 
 public class ErrorRateQualityCalculatorTest extends QualityCalculatorTest {

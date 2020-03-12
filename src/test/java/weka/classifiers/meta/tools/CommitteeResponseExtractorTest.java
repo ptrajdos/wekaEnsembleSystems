@@ -1,6 +1,6 @@
 package weka.classifiers.meta.tools;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
 

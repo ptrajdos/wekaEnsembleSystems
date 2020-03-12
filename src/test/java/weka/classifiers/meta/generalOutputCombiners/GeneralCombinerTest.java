@@ -111,10 +111,62 @@ public abstract class GeneralCombinerTest extends TestCase {
 		assertTrue("Combined Distribution check", DistributionChecker.checkDistribution(combinedDist));
 		
 		
-		
 		}catch(Exception e) {
 			fail("Exception has been found: " + e.toString());
 		}
+	}
+	
+	public void testZeroWeights() {
+		RandomDataGenerator gen = new RandomDataGenerator();
+		Instances data = gen.generateData();
+		Instance testInstance = data.get(0);
+		
+		Classifier[] committee = {new J48(), new NaiveBayes(), new J48()};
+		GeneralCombiner comb = (GeneralCombiner) this.getCombiner();
+		
+		try {
+		for(int i=0;i<committee.length;i++)
+			committee[i].buildClassifier(data);
+		
+		double[][] rawPredictions = new double[committee.length][];
+		for(int i=0;i<rawPredictions.length;i++) {
+			rawPredictions[i] = committee[i].distributionForInstance(testInstance);
+		}
+		
+		double[] weights = new double[committee.length];
+		Arrays.fill(weights, 0.0);
+		
+		double[] combinedDist  = comb.getCombinedDistributionForInstance(committee, testInstance,weights);
+		assertTrue("Zero weights should result into zero distribution", Utils.eq(Utils.sum(combinedDist),0.0) );
+		
+		combinedDist = comb.getCombinedDistributionForInstance(rawPredictions, testInstance, weights);
+		assertTrue("Zero weights should result into zero distribution", Utils.eq(Utils.sum(combinedDist),0.0) );
+		
+		}catch(Exception e) {
+			fail("Zero weights. Exception has been caught: " + e.toString());
+		}
+	 
+	 
+	 
+	}
+	
+	public void testZeroResponses() {
+		GeneralCombiner comb = (GeneralCombiner) this.getCombiner();
+		int numClassifiers=3;
+		RandomDataGenerator gen = new RandomDataGenerator();
+		Instances data = gen.generateData();
+		Instance testInstance = data.get(0);
+		int numClasses=data.numClasses();
+		double[][] zeroResonse = new double[numClassifiers][numClasses];
+		
+		
+		try {
+			double[] distribution = comb.getCombinedDistributionForInstance(zeroResonse, testInstance);
+			assertTrue("Zero distribution", Utils.eq(Utils.sum(distribution), 0.0));
+		} catch (Exception e) {
+			fail("Zero Response. Exception has been caught: " + e.toString());
+		}
+		
 	}
 	
 	public void testNormalizaOutput() {
@@ -130,7 +182,7 @@ public abstract class GeneralCombinerTest extends TestCase {
 			double[] zeroDist = new double[numClasses[i]];
 			Arrays.fill(zeroDist, 0.0);
 			comb.normalizeOutput(zeroDist);
-			assertFalse("Normalization prperties", DistributionChecker.checkDistribution(zeroDist));
+			assertTrue("Normalization prperties", DistributionChecker.checkDistribution(zeroDist));
 			
 			
 		}

@@ -11,9 +11,7 @@ import weka.classifiers.meta.simpleVotingLikeCombiners.OutputCombiner;
 import weka.classifiers.meta.simpleVotingLikeCombiners.OutputCombinerGeneralBased;
 import weka.core.Instance;
 import weka.core.Option;
-import weka.core.OptionHandler;
 import weka.core.RevisionUtils;
-import weka.core.Utils;
 import weka.core.UtilsPT;
 
 /**
