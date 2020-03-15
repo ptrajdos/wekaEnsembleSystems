@@ -4,6 +4,9 @@ import java.util.List;
 
 import weka.classifiers.AbstractClassifierTest;
 import weka.classifiers.Classifier;
+import weka.classifiers.bayes.NaiveBayes;
+import weka.classifiers.lazy.IBk;
+import weka.classifiers.trees.J48;
 import weka.core.Instances;
 import weka.tools.data.RandomDataGenerator;
 import weka.tools.tests.DistributionChecker;
@@ -20,7 +23,10 @@ public class MultipleClassifiersCombinerWithValidationSetTest extends AbstractCl
 		/*
 		 * For testing classifier 
 		 */
-		return new MultipleClassifierCombinerWithValidationSetDummy();
+		
+		MultipleClassifiersCombinerWithValidationSet classifier =new MultipleClassifierCombinerWithValidationSetDummy(); 
+		classifier.setClassifiers(new Classifier[] {new J48(),new NaiveBayes(), new IBk()});
+		return classifier;
 	}
 	
 	
@@ -76,6 +82,8 @@ public class MultipleClassifiersCombinerWithValidationSetTest extends AbstractCl
 		
 		
 	}
+	
+
 
 
 }

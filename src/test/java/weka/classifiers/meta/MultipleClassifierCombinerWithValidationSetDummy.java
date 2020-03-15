@@ -7,7 +7,6 @@ package weka.classifiers.meta;
 import weka.classifiers.meta.generalOutputCombiners.MeanCombiner;
 import weka.classifiers.meta.generalOutputCombiners.OutputCombiner;
 import weka.core.Instance;
-import weka.core.Instances;
 import weka.tools.GlobalInfoHandler;
 
 /**

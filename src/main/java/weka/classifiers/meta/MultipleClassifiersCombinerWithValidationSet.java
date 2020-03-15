@@ -9,8 +9,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Vector;
 
-import org.netlib.util.doubleW;
-
 import weka.classifiers.RandomizableMultipleClassifiersCombiner;
 import weka.core.Capabilities;
 import weka.core.Capabilities.Capability;
