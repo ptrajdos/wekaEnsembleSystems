@@ -28,23 +28,17 @@ public class MedCombiner extends GeneralCombiner {
 
 
 
-	/* (non-Javadoc)
-	 * @see weka.classifiers.meta.generalOutputCombiners.OutputCombiner#getCombinedDistributionForInstance(double[][], weka.core.Instance)
-	 */
-	@Override
-	public double[] getCombinedDistributionForInstance(double[][] rawPredictions, Instance testInstance)
-			throws Exception {
-		double[] weights = new double[rawPredictions.length];
-		Arrays.fill(weights, 1);
-		Utils.normalize(weights);
-		return this.getCombinedDistributionForInstance(rawPredictions, testInstance, weights);
-	}
 
 	@Override
 	public double[] getCombinedDistributionForInstance(double[][] rawPredictions, Instance testInstance,
 			double[] weights) throws Exception {
-		this.checkCompatibility(rawPredictions, testInstance, weights);
+		this.checkCompatibility(rawPredictions, testInstance, weights);		
 		int numClasses = testInstance.numClasses();
+		
+		if(Utils.eq(Utils.sum(weights), 0.0))
+			return new double[numClasses];
+		
+		
 		int numModels = rawPredictions.length;
 		double[] prediction  = new double[numClasses];
 		double[] newWeights = Arrays.copyOf(weights, weights.length);

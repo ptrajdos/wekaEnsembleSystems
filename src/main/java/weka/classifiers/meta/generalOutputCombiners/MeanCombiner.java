@@ -10,7 +10,7 @@ import weka.core.Utils;
 /**
  * @author pawel trajdos
  * @since 1.1.1
- * @version 1.1.1
+ * @version 1.4.0
  *
  */
 public class MeanCombiner extends GeneralCombiner {
@@ -47,7 +47,9 @@ public class MeanCombiner extends GeneralCombiner {
 		double[] finalPrediction = new double[numClasses];
 		
 		double weightsSum = Utils.sum(weights);
-		weightsSum = Utils.eq(weightsSum, 0)? 1 :weightsSum;
+		if(Utils.eq(weightsSum, 0.0))
+			return new double[numClasses];
+		
 		
 		for(int i=0;i<numClasses;i++){
 			for(int j=0;j<rawPredictions.length;j++){

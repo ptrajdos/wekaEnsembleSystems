@@ -14,7 +14,7 @@ import weka.core.Utils;
 /**
  * @author pawel trajdos
  * @since 1.1.1
- * @version 1.3.1
+ * @version 1.4.0
  *
  */
 public abstract class GeneralCombiner implements OutputCombiner,Serializable, RevisionHandler {
@@ -41,6 +41,19 @@ public abstract class GeneralCombiner implements OutputCombiner,Serializable, Re
 			throw new Exception("Test instance and the rawPredictions are incompatible");
 		if(rawPredictions.length != weights.length)
 			throw new Exception("Test instance and the weights are incompatible");
+	}
+	
+	/* (non-Javadoc)
+	 * @see weka.classifiers.meta.generalOutputCombiners.OutputCombiner#getCombinedDistributionForInstance(double[][], weka.core.Instance)
+	 */
+	@Override
+	public double[] getCombinedDistributionForInstance(double[][] rawPredictions, Instance testInstance)
+			throws Exception {
+			int numModels = rawPredictions.length;
+			double[] weights = new double[numModels];
+			Arrays.fill(weights, 1.0);
+			
+		return this.getCombinedDistributionForInstance(rawPredictions, testInstance, weights);
 	}
 	
 	
@@ -79,6 +92,8 @@ public abstract class GeneralCombiner implements OutputCombiner,Serializable, Re
 		
 		return this.getCombinedDistributionForInstance(predictions, testInstance, weights);
 	}
+	
+	
 
 	public void normalizeOutput(double[] output){
 		if(Utils.eq(Utils.sum(output), 0)){

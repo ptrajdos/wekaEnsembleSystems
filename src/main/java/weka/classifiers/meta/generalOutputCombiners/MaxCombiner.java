@@ -28,16 +28,6 @@ public class MaxCombiner extends GeneralCombiner {
 		// TODO Auto-generated constructor stub
 	}
 
-	/* (non-Javadoc)
-	 * @see weka.classifiers.meta.generalOutputCombiners.OutputCombiner#getCombinedDistributionForInstance(double[][], weka.core.Instance)
-	 */
-	@Override
-	public double[] getCombinedDistributionForInstance(double[][] rawPredictions, Instance testInstance)
-			throws Exception {
-		double[] weights = new double[rawPredictions.length];
-		Arrays.fill(weights, 1.0);
-		return this.getCombinedDistributionForInstance(rawPredictions, testInstance,weights);
-	}
 
 	@Override
 	public double[] getCombinedDistributionForInstance(double[][] rawPredictions, Instance testInstance,

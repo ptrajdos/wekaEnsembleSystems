@@ -15,7 +15,7 @@ import weka.core.Utils;
 /**
  * @author pawel trajdos
  * @since 1.1.1
- * @version 1.1.1
+ * @version 1.4.0
  *
  */
 public class StatsUtils {
@@ -70,9 +70,10 @@ public class StatsUtils {
 			
 			if(!Utils.eq(sumOfWeights, 0)){
 				median/=sumOfWeights;
+				return median;
 			}
 			
-			return median;
+			return 0;
 		}
 		
 		public static double[] generateUniformWeights(int length){
@@ -83,8 +84,13 @@ public class StatsUtils {
 		
 		public static void checkWeights(List<Pair> list)throws Exception{
 			double weightsSum = 0;
+			double weight = 0;
 			for (Pair pair : list) {
-				weightsSum += pair.getWeight();
+				weight =pair.getWeight();
+				if(weight<0)
+					throw new Exception("Negative weights are not allowed");
+				weightsSum += weight;
+				
 			}
 			if(! Utils.eq(weightsSum, 1))throw new Exception("Weights do not sum up to 1!");
 	}
