@@ -6,10 +6,10 @@
 PackageName= WekaEnsembleSystems
 
 # Version (required)
-Version=1.4.0
+Version=1.5.0
 
 #Date
-Date=2020-03-15
+Date=2020-03-19
 
 # Title (required)
 Title= Ensemble Systems

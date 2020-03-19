@@ -37,6 +37,11 @@ public abstract class MultipleClassifiersCombinerWithValidationSet extends Rando
 	
 	protected Instances validationSet;
 	
+	/**
+	 * List of validation responses
+	 * Array stores lists of instance-specific responses
+	 * 
+	 */
 	protected List<double[]>[] validationResponses;
 	
 	
