@@ -24,7 +24,7 @@ import weka.tools.data.InstancesOperator;
  * MultipleClassifiersCombiner with validation set
  * @author pawel trajdos
  * @since 1.4.0
- * @version 1.4.0
+ * @version 1.5.0
  *
  */
 public abstract class MultipleClassifiersCombinerWithValidationSet extends RandomizableMultipleClassifiersCombiner implements GlobalInfoHandler {
@@ -53,6 +53,8 @@ public abstract class MultipleClassifiersCombinerWithValidationSet extends Rando
 	protected int numFolds=2;
 	
 	protected boolean upToDate=false;
+	
+	protected boolean finalLearning=false;
 	
 	
 
@@ -126,6 +128,8 @@ public abstract class MultipleClassifiersCombinerWithValidationSet extends Rando
 		if(!this.m_DoNotCheckCapabilities)
 			this.getCapabilities().testWithFail(data);
 		
+		this.finalLearning=false;
+		
 		this.validationResponses = new List[this.m_Classifiers.length];
 		for(int i=0;i<this.validationResponses.length;i++) {
 			this.validationResponses[i] = new LinkedList<double[]>();
@@ -141,6 +145,7 @@ public abstract class MultipleClassifiersCombinerWithValidationSet extends Rando
 		/**
 		 * Build the entire ensemble
 		 */
+		this.finalLearning=true;
 		this.trainBaseClassifiers(data);
 		
 		
@@ -171,8 +176,6 @@ public abstract class MultipleClassifiersCombinerWithValidationSet extends Rando
 		
 		this.trainBaseClassifiers(train);
 		this.updateValidationSet(validation);
-		
-		
 	}
 	
 	public void updateValidationSet(Instances data) throws Exception {
@@ -266,6 +269,7 @@ public abstract class MultipleClassifiersCombinerWithValidationSet extends Rando
 		Capabilities baseCaps = super.getCapabilities();
 		baseCaps.disable(Capability.NUMERIC_CLASS);
 		baseCaps.disable(Capability.DATE_CLASS);
+		baseCaps.disable(Capability.MISSING_CLASS_VALUES);
 		baseCaps.enable(Capability.NOMINAL_CLASS);
 		baseCaps.setMinimumNumberInstances(2);
 		return baseCaps; 
