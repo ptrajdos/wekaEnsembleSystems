@@ -135,10 +135,11 @@ public class ClassifierWithAlternativeModel extends SingleClassifierEnhancer imp
 
 	@Override
 	public Capabilities getCapabilities() {
-		if(!this.useAlternative)
-			return super.getCapabilities();
 		
-		return this.alternativeModel.getCapabilities();
+		Capabilities caps = this.alternativeModelPrototype.getCapabilities();
+		caps.setMinimumNumberInstances(1);
+		
+		return caps;
 	}
 	
 	

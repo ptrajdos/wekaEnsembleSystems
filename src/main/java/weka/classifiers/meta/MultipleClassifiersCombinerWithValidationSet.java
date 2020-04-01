@@ -24,7 +24,7 @@ import weka.tools.data.InstancesOperator;
  * MultipleClassifiersCombiner with validation set
  * @author pawel trajdos
  * @since 1.4.0
- * @version 1.5.0
+ * @version 1.6.0
  *
  */
 public abstract class MultipleClassifiersCombinerWithValidationSet extends RandomizableMultipleClassifiersCombiner implements GlobalInfoHandler {
@@ -135,12 +135,17 @@ public abstract class MultipleClassifiersCombinerWithValidationSet extends Rando
 			this.validationResponses[i] = new LinkedList<double[]>();
 		}
 		
-		if(this.crossvalidate) {
-			this.trainCrossvalidation(data);
+		int numInstances = data.numInstances();
+		if(numInstances==1) {
+			this.trainOneInstance(data);
 		}
-		else {
-			this.trainSplit(data);
-		}
+		else
+			if(this.crossvalidate) {
+				this.trainCrossvalidation(data);
+			}
+			else {
+				this.trainSplit(data);
+			}
 		
 		/**
 		 * Build the entire ensemble
@@ -152,6 +157,10 @@ public abstract class MultipleClassifiersCombinerWithValidationSet extends Rando
 	}
 	
 	public void trainCrossvalidation(Instances data) throws Exception {
+		int numTrainInstances = data.numInstances();
+		if(numTrainInstances< this.numFolds)
+			this.setNumFolds(numTrainInstances);//Leave One Out CV
+		
 		this.validationSet = new Instances(data, 0);
 		Instances tmpSet = new Instances(data);
 		tmpSet.stratify(this.numFolds);
@@ -161,17 +170,44 @@ public abstract class MultipleClassifiersCombinerWithValidationSet extends Rando
 		for(int k=0;k<this.numFolds;k++) {
 			train = tmpSet.trainCV(this.numFolds, k);
 			val = tmpSet.testCV(this.numFolds, k);
-			this.trainBaseClassifiers(train);
-			this.updateValidationSet(val);
+			try {
+				this.trainBaseClassifiers(train);
+				this.updateValidationSet(val);
+			}catch(Exception e) {
+				e.printStackTrace();
+				this.trainBaseClassifiers(train);
+			}
 		}
-		
-		
+
 	}
 	
 	public void trainSplit(Instances data) throws Exception {
 		Instances[] tmpSet = InstancesOperator.stratifiedSplitSet(data, this.splitFactor, this.m_Seed);
 		Instances train = tmpSet[0];
 		Instances validation = tmpSet[1];
+		
+		if(train.numInstances()<1 | validation.numInstances()<1) {
+			this.setNumFolds(data.numInstances());
+			this.trainCrossvalidation(data);
+			return;
+		}
+			
+		
+		
+		this.validationSet = new Instances(data,0);
+		
+		this.trainBaseClassifiers(train);
+		this.updateValidationSet(validation);
+	}
+	
+	public void trainOneInstance(Instances data) throws Exception {
+		Instances train = new Instances(data,0);
+		Instances validation = new Instances(data,0);
+		
+		train.add(data.get(0));
+		validation.add(data.get(0));
+		
+		
 		this.validationSet = new Instances(data,0);
 		
 		this.trainBaseClassifiers(train);
@@ -271,7 +307,7 @@ public abstract class MultipleClassifiersCombinerWithValidationSet extends Rando
 		baseCaps.disable(Capability.DATE_CLASS);
 		baseCaps.disable(Capability.MISSING_CLASS_VALUES);
 		baseCaps.enable(Capability.NOMINAL_CLASS);
-		baseCaps.setMinimumNumberInstances(2);
+		baseCaps.setMinimumNumberInstances(1);
 		return baseCaps; 
 	}
 	

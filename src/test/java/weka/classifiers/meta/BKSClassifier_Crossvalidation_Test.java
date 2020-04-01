@@ -12,14 +12,14 @@ import weka.tools.tests.RandomDataChecker;
 
 /**
  * @author pawel gtrajdos
- * @since 1.5.0
- * @version 1.5.0
+ * @since 1.6.0
+ * @version 1.6.0
  * 
  *
  */
-public class BKSClassifierTest extends MultipleClassifiersCombinerWithValidationSetTest {
+public class BKSClassifier_Crossvalidation_Test extends MultipleClassifiersCombinerWithValidationSet2Test{
 
-	public BKSClassifierTest(String name) {
+	public BKSClassifier_Crossvalidation_Test(String name) {
 		super(name);
 		// TODO Auto-generated constructor stub
 	}
@@ -30,6 +30,7 @@ public class BKSClassifierTest extends MultipleClassifiersCombinerWithValidation
 		ClassifierWithAlternativeModel alt = new ClassifierWithAlternativeModel();
 		alt.setClassifier(new NaiveBayes());
 		bks.setClassifiers(new Classifier[]{new J48(),new NaiveBayes(),new ZeroR(), new IBk(),alt});
+		bks.setCrossvalidate(true);
 		return bks;
 	}
 

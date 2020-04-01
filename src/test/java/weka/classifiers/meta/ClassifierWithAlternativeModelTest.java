@@ -1,8 +1,5 @@
 package weka.classifiers.meta;
 
-import java.awt.geom.GeneralPath;
-
-
 import weka.classifiers.AbstractClassifierTest;
 import weka.classifiers.Classifier;
 import weka.classifiers.trees.J48;
