@@ -120,12 +120,6 @@ public class BKSClassifier extends MultipleClassifiersCombinerWithValidationSet 
 		
 		
 		double[] distribution = this.outCombiner.getCombinedDistributionForInstance(this.m_Classifiers, instance);
-		int maxIdx = Utils.maxIndex(distribution);
-		int numClasses = this.validationSet.numClasses();
-		if( distribution[maxIdx] > (1.0/numClasses)) {
-			return distribution;
-		}
-		
 		
 		String responsePattern = this.getResponsePattern(instance);
 		if(this.bksSubspaces.containsKey(responsePattern)) {

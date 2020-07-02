@@ -7,6 +7,7 @@ import weka.classifiers.Classifier;
 import weka.classifiers.bayes.NaiveBayes;
 import weka.classifiers.lazy.IBk;
 import weka.classifiers.trees.J48;
+import weka.core.Instance;
 import weka.core.Instances;
 import weka.tools.data.RandomDataGenerator;
 import weka.tools.tests.DistributionChecker;
@@ -25,7 +26,9 @@ public class MultipleClassifiersCombinerWithValidationSetTest extends AbstractCl
 		 */
 		
 		MultipleClassifiersCombinerWithValidationSet classifier =new MultipleClassifierCombinerWithValidationSetDummy(); 
-		classifier.setClassifiers(new Classifier[] {new J48(),new NaiveBayes(), new IBk()});
+		ClassifierWithAlternativeModel alt = new ClassifierWithAlternativeModel();
+		alt.setClassifier(new NaiveBayes());
+		classifier.setClassifiers(new Classifier[] {new J48(),new NaiveBayes(), new IBk(),alt});
 		return classifier;
 	}
 	
@@ -79,9 +82,34 @@ public class MultipleClassifiersCombinerWithValidationSetTest extends AbstractCl
 			fail("Validation set test. Exception caught: " + e.toString());
 		}
 		
+	}
+	
+	public void testSplits() {
+		MultipleClassifiersCombinerWithValidationSet comb = (MultipleClassifiersCombinerWithValidationSet) this.getClassifier();
+		checkSplits(comb, 10, 0.0);
+		checkSplits(comb, 10, 1.0);
+		checkSplits(comb, 10, 0.5);
+	}
+	
+	public void checkSplits(MultipleClassifiersCombinerWithValidationSet comb, int numInstances, double splitFactor) {
+		RandomDataGenerator gen = new RandomDataGenerator();
+		gen.setNumObjects(numInstances);
+		comb.setSplitFactor(splitFactor);
 		
+		Instances data = gen.generateData();
+		Instance testInstance = data.get(0);
+		
+		try {
+			comb.buildClassifier(data);
+			double[] distribution = comb.distributionForInstance(testInstance);
+			assertTrue("Check distribution",  DistributionChecker.checkDistribution(distribution));
+		} catch (Exception e) {
+			fail("CheckSplits has failed. num instances: " + numInstances + " split Factor: " + splitFactor + " With exception: " + e.toString());
+		}
 		
 	}
+	
+	
 	
 
 
