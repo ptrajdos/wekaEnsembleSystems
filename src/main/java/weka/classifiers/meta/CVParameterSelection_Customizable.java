@@ -21,7 +21,7 @@ import weka.core.UtilsPT;
 /**
  * @author pawel trajdos
  * @since 1.1.1
- * @version 1.1.1
+ * @version 1.9.0
  *
  */
 public class CVParameterSelection_Customizable extends CVParameterSelection {
