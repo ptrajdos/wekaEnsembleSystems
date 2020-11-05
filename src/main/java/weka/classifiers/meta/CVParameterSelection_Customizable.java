@@ -16,6 +16,7 @@ import weka.core.Instances;
 import weka.core.Option;
 import weka.core.OptionHandler;
 import weka.core.Utils;
+import weka.core.UtilsPT;
 
 /**
  * @author pawel trajdos
@@ -244,24 +245,9 @@ public class CVParameterSelection_Customizable extends CVParameterSelection {
 		 */
 		@Override
 		public void setOptions(String[] options) throws Exception {
-			String qualCalcString = Utils.getOption("QC", options);
-		    if(qualCalcString.length() != 0) {
-		      String combinerClassSpec[] = Utils.splitOptions(qualCalcString);
-		      if(combinerClassSpec.length == 0) { 
-		        throw new Exception("Invalid Quality calculator."); 
-		      }
-		      String className = combinerClassSpec[0];
-		      combinerClassSpec[0] = "";
-
-		      this.setQualitCalc(
-		                   (QualityCalculator) Utils.forName( QualityCalculator.class, 
-		                                 className, 
-		                                 combinerClassSpec)
-		                                        );
-		    }
-		    else 
-		      this.setQualitCalc(new ErrorRateQualityCalculator());
 			
+			this.setQualitCalc((QualityCalculator) UtilsPT.parseObjectOptions(options, "QC", new ErrorRateQualityCalculator(), QualityCalculator.class));
+
 			super.setOptions(options);
 		}
 
@@ -273,11 +259,9 @@ public class CVParameterSelection_Customizable extends CVParameterSelection {
 		@Override
 		public String[] getOptions() {
 			Vector<String> options = new Vector<String>();
-		    
 
 		    options.add("-QC");
-		    String combinerOptions = (this.qualitCalc instanceof OptionHandler)? Utils.joinOptions(((OptionHandler)this.qualitCalc).getOptions()):"";
-		    options.add(this.qualitCalc.getClass().getName()+" "+combinerOptions); 
+		    options.add(UtilsPT.getClassAndOptions(this.qualitCalc));
 		    
 		    Collections.addAll(options, super.getOptions());
 		    

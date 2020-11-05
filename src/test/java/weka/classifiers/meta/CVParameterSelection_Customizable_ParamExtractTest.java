@@ -1,13 +1,12 @@
 package weka.classifiers.meta;
 
-import static org.junit.Assert.assertEquals;
-
 import org.junit.Before;
 import org.junit.Test;
 
+import junit.framework.TestCase;
 import weka.classifiers.lazy.IBk;
 
-public class CVParameterSelection_CustomizableTest_ParamExtract {
+public class CVParameterSelection_Customizable_ParamExtractTest extends TestCase {
 	
 	public CVParameterSelection_Customizable classifier = null;
 
