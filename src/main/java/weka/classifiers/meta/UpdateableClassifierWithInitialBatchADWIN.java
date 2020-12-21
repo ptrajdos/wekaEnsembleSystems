@@ -182,10 +182,8 @@ public class UpdateableClassifierWithInitialBatchADWIN extends SingleClassifierE
 	 */
 	@Override
 	public void setOptions(String[] options) throws Exception {
-		super.setOptions(options);
-		
 		this.setInitialBatchSize(UtilsPT.parseIntegerOption(options, "IBS", 100));
-	
+		super.setOptions(options);
 	}
 
 	/* (non-Javadoc)

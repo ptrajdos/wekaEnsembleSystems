@@ -77,8 +77,8 @@ public class ClassifierWithAlternativeModel extends SingleClassifierEnhancer imp
 
 	@Override
 	public void setOptions(String[] options) throws Exception {
-		super.setOptions(options);
 		this.setAlternativeModelPrototype((Classifier) UtilsPT.parseObjectOptions(options, "AM", new ZeroR(), Classifier.class));
+		super.setOptions(options);
 	}
 
 	@Override

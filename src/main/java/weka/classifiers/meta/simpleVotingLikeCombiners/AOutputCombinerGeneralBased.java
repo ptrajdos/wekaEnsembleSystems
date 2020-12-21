@@ -22,11 +22,12 @@ import weka.core.UtilsPT;
  */
 public abstract class AOutputCombinerGeneralBased extends OutputCombinerBase {
 
+
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = -3850999140140846979L;
-	
+	private static final long serialVersionUID = -6016444809956541386L;
+
 	/**
 	 * Combiner for class  soft outputs
 	 */

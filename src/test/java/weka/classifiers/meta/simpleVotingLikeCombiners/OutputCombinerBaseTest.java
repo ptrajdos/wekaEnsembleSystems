@@ -13,6 +13,7 @@ import weka.core.Instances;
 import weka.core.OptionHandler;
 import weka.core.OptionHandlersTest.OptionHandlerTest;
 import weka.core.RevisionHandler;
+import weka.tools.SerialCopier;
 import weka.tools.data.RandomDataGenerator;
 import weka.tools.tests.DistributionChecker;
 import weka.tools.tests.WekaGOEChecker;
@@ -25,6 +26,15 @@ public abstract class OutputCombinerBaseTest extends OptionHandlerTest {
 	
 	public OutputCombinerBaseTest(String name) {
 		super(name, OutputCombinerBase.class.getCanonicalName());
+	}
+	
+	public void testSerialization() {
+		OutputCombiner comb = (OutputCombiner) this.getOptionHandler();
+		try {
+			OutputCombiner comb2 = (OutputCombiner) SerialCopier.makeCopy(comb);
+		} catch (Exception e) {
+			fail("An exception has been caught:" + e.getLocalizedMessage());
+		}
 	}
 	
 	public void testTipsCalls() {

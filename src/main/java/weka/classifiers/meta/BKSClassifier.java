@@ -172,10 +172,11 @@ public class BKSClassifier extends MultipleClassifiersCombinerWithValidationSet 
 
 	@Override
 	public void setOptions(String[] options) throws Exception {
-		super.setOptions(options);
 		
 		this.setSubSpaceClassifierPrototype((Classifier) UtilsPT.parseObjectOptions(options, "SSC", new ZeroR(), Classifier.class));
 		this.setOutCombiner((OutputCombiner) UtilsPT.parseObjectOptions(options, "BOC", new VoteCombiner(), OutputCombiner.class));
+		
+		super.setOptions(options);
 	}
 
 	@Override

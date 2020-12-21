@@ -266,13 +266,14 @@ public abstract class MultipleClassifiersCombinerWithValidationSet extends Rando
 
 	@Override
 	public void setOptions(String[] options) throws Exception {
-		super.setOptions(options);
 		
 		this.setSplitFactor(UtilsPT.parseDoubleOption(options, "SF", 0.6));
 		
 		this.setCrossvalidate(Utils.getFlag("CV", options));
 		
 		this.setNumFolds(UtilsPT.parseIntegerOption(options, "NF", 2));
+		
+		super.setOptions(options);
 	}
 
 

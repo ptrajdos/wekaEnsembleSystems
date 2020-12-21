@@ -151,11 +151,12 @@ public class UpdateableClassifierWithInitialBatch extends SingleClassifierEnhanc
 	 */
 	@Override
 	public void setOptions(String[] options) throws Exception {
-		super.setOptions(options);
 		
 		this.setInitialBatchSize(UtilsPT.parseIntegerOption(options, "IBS", 100));
 		
 		this.setRegularBatchSize(UtilsPT.parseIntegerOption(options, "RBS", 100));
+		
+		super.setOptions(options);
 	}
 
 	/* (non-Javadoc)
