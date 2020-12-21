@@ -3,6 +3,8 @@ package weka.classifiers.meta.simpleVotingLikeCombiners;
 import weka.classifiers.Classifier;
 import weka.classifiers.bayes.NaiveBayes;
 import weka.classifiers.functions.LinearRegression;
+import weka.classifiers.meta.Bagging;
+import weka.classifiers.meta.RandomSubSpace;
 import weka.classifiers.meta.Stacking;
 import weka.classifiers.meta.Vote;
 import weka.classifiers.trees.J48;
@@ -11,8 +13,8 @@ import weka.core.Instances;
 import weka.core.OptionHandler;
 import weka.core.OptionHandlersTest.OptionHandlerTest;
 import weka.core.RevisionHandler;
-import weka.core.Utils;
 import weka.tools.data.RandomDataGenerator;
+import weka.tools.tests.DistributionChecker;
 import weka.tools.tests.WekaGOEChecker;
 
 public abstract class OutputCombinerBaseTest extends OptionHandlerTest {
@@ -92,8 +94,31 @@ public abstract class OutputCombinerBaseTest extends OptionHandlerTest {
 		} catch (Exception e) {
 			fail("Exception has been caught" + e.toString());
 		}
+	}
+	
+	public void testIteratedSingleDistribution(){
+		RandomDataGenerator gen = new RandomDataGenerator();
+		Instances data  = gen.generateData();
+		Instance testInstance = data.get(0);
 		
+		Bagging bag = new Bagging();
+		RandomSubSpace rs = new RandomSubSpace();
 		
+		try {
+			bag.buildClassifier(data);
+			rs.buildClassifier(data);
+			OutputCombiner comb = (OutputCombiner) this.getOptionHandler();
+			
+			double[] distribution = comb.getDistributionForInstance(bag, testInstance);
+			assertTrue("Check distribution", DistributionChecker.checkDistribution(distribution));
+			
+			distribution = comb.getDistributionForInstance(rs, testInstance);
+			assertTrue("Check distribution", DistributionChecker.checkDistribution(distribution));
+			
+			
+		} catch (Exception e) {
+			fail("An exception has been caught!" + e.getMessage());
+		}
 		
 	}
 	
@@ -110,15 +135,7 @@ public abstract class OutputCombinerBaseTest extends OptionHandlerTest {
 	}
 
 	public boolean checkDistribution(double[] dist) {
-		
-		if(! Utils.eq(Utils.sum(dist), 1.0) )
-			return false;
-		
-		for(int i=0;i<dist.length;i++)
-			if(dist[i] < 0 | dist[i] >1)
-				return false;
-		
-		return true;
+		return DistributionChecker.checkDistribution(dist);
 	}
 	
 

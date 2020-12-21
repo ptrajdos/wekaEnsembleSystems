@@ -7,6 +7,7 @@ import weka.classifiers.Classifier;
 import weka.classifiers.functions.LinearRegression;
 import weka.core.Instance;
 import weka.core.Instances;
+import weka.core.Utils;
 import weka.tools.SerialCopier;
 import weka.tools.data.RandomDataGenerator;
 
@@ -85,6 +86,60 @@ public abstract class GeneralCombinerNumClassTest extends TestCase {
 		} catch (Exception e) {
 			fail("Class combination. Exception has been caught: " + e.toString());
 		}
+		
+	}
+	
+	public void testZeroWeights() {
+		RandomDataGenerator gen = new RandomDataGenerator();
+		gen.setAddClassAttrib(false);
+		gen.setNumNominalAttributes(0);
+		Instances data = gen.generateData();
+		data.setClassIndex(0);
+		Instance testInstance = data.get(0);
+		
+		Classifier[] committee = {new LinearRegression(), new LinearRegression()};
+		
+		
+		double[] weights = new double[committee.length];
+		Arrays.fill(weights, 0.0);
+		
+		
+		OutputCombinerNumClass comb = this.getCombiner();
+		
+		try {
+			for (Classifier classifier : committee) {
+				classifier.buildClassifier(data);
+			}
+			double classVal = comb.getClass(committee, testInstance);
+			classVal = comb.getClass(committee, testInstance, weights);
+		} catch (Exception e) {
+			fail("Class combination. Exception has been caught: " + e.toString());
+		}
+	}
+	
+	public void testAllMissingPredictions() {
+		RandomDataGenerator gen = new RandomDataGenerator();
+		gen.setAddClassAttrib(false);
+		gen.setNumNominalAttributes(0);
+		Instances data = gen.generateData();
+		data.setClassIndex(0);
+		Instance testInstance = data.get(0);
+		
+	
+		
+		
+		OutputCombinerNumClass comb = this.getCombiner();
+		int numClassifiers=3;
+		double[] predictions = new double[numClassifiers];
+		Arrays.fill(predictions, Utils.missingValue());
+		
+		try {
+	
+			double classVal = comb.getClass(predictions, testInstance);
+		} catch (Exception e) {
+			fail("Class combination. Exception has been caught: " + e.toString());
+		}
+		
 		
 	}
 }
