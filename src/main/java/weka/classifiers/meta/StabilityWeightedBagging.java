@@ -109,8 +109,7 @@ public class StabilityWeightedBagging extends CustomizableBaggingClassifier2 {
 			 double distDist = this.distributionDistanceCalculator.calculateDistance(initDistr, postDistr);
 			 double[] aPrioriDist = InstancesOperator.classFreq(tmpData);
 			 double classSize = tmpData.numInstances() * aPrioriDist[i];
-			 double dist2APriori = this.distributionDistanceCalculator.calculateDistance(initDistr, aPrioriDist) + this.eps;
-			 distDist *=  classSize/dist2APriori;
+			 distDist *=  classSize;
 			
 			 classWeights[i]=distDist;
 			
