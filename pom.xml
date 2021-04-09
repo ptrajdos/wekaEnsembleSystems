@@ -7,7 +7,7 @@
   <groupId>com.github.ptrajdos</groupId>
   <artifactId>WekaEnsembleSystems</artifactId>
   <packaging>jar</packaging>
-  <version>1.9.0</version>
+  <version>1.10.0</version>
 
   <name>Weka Ensemble systems</name>
   <description> Weka implementation of the Ensemble systems for Weka </description>

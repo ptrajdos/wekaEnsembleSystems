@@ -40,6 +40,8 @@ public class StabilityWeightedBagging extends CustomizableBaggingClassifier2 {
 	
 	protected double eps=1E-6;
 	
+	protected boolean useApriori=false;
+	
 	
 
 	/**
@@ -108,7 +110,7 @@ public class StabilityWeightedBagging extends CustomizableBaggingClassifier2 {
 			 postDistr = classifierCopy.distributionForInstance(instance);
 			 double distDist = this.distributionDistanceCalculator.calculateDistance(initDistr, postDistr);
 			 double[] aPrioriDist = InstancesOperator.classFreq(tmpData);
-			 double classSize = tmpData.numInstances() * aPrioriDist[i];
+			 double classSize = tmpData.numInstances() * (this.useApriori? aPrioriDist[i]:1.0);
 			 distDist *=  classSize;
 			
 			 classWeights[i]=distDist;
@@ -160,6 +162,11 @@ public class StabilityWeightedBagging extends CustomizableBaggingClassifier2 {
 		          "(default:" + 0.0 + ").\n",
 			      "IQRFU", 1, "-IQRFU"));
 		 
+		 newVector.addElement(new Option(
+			      "\tIndicates if the prior distribution is used"+
+		          "(default:" + false + ").\n",
+			      "UAPR", 0, "-UAPR"));
+		 
 		 newVector.addAll(Collections.list(super.listOptions()));
 		    
 		return newVector.elements();
@@ -179,6 +186,9 @@ public class StabilityWeightedBagging extends CustomizableBaggingClassifier2 {
 	    options.add("-IQRFU");
 	    options.add(""+this.getIQRFactorU());
 	    
+	    if(this.isUseApriori())
+	    	options.add("-UAPR");
+	    
 	    
 	    Collections.addAll(options, super.getOptions());
 	    
@@ -192,6 +202,8 @@ public class StabilityWeightedBagging extends CustomizableBaggingClassifier2 {
 		this.setDistributionDistanceCalculator((DistributionDistanceCalculator) UtilsPT.parseObjectOptions(options, "DCA", new DistributionDistanceCalculatorEuclidean(), DistributionDistanceCalculator.class));
 		this.setIQRFactorL(UtilsPT.parseDoubleOption(options, "IQRFL", 3.0));
 		this.setIQRFactorU(UtilsPT.parseDoubleOption(options, "IQRFU", 0.0));
+		
+		this.setUseApriori( Utils.getFlag("UAPR", options));
 		
 		super.setOptions(options);
 	}
@@ -230,6 +242,25 @@ public class StabilityWeightedBagging extends CustomizableBaggingClassifier2 {
 	
 	public String IQRFactorUTipText() {
 		return "Determines the IQR factor to calculate the upper threshold";
+	}
+
+	/**
+	 * @return the useApriori
+	 */
+	public boolean isUseApriori() {
+		return this.useApriori;
+	}
+
+	/**
+	 * @param useApriori the useApriori to set
+	 */
+	public void setUseApriori(boolean useApriori) {
+		this.useApriori = useApriori;
 	} 
+	
+	public String useAprioriTipText() {
+		return "Determines whether the estimator uses apriori distribution";
+	}
+	
 
 }
