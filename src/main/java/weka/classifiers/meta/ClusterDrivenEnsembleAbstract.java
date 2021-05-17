@@ -8,16 +8,20 @@ import java.util.Enumeration;
 import java.util.Vector;
 
 import weka.classifiers.ParallelIteratedSingleClassifierEnhancer;
+import weka.classifiers.meta.generalOutputCombiners.MeanCombiner;
+import weka.classifiers.meta.generalOutputCombiners.MeanCombinerNumClass;
+import weka.classifiers.meta.generalOutputCombiners.OutputCombiner;
+import weka.classifiers.meta.generalOutputCombiners.OutputCombinerNumClass;
 import weka.classifiers.rules.ZeroR;
 import weka.clusterers.Clusterer;
 import weka.clusterers.NumberOfClustersRequestable;
 import weka.clusterers.SimpleKMeans;
 import weka.core.Capabilities;
 import weka.core.CapabilitiesHandler;
+import weka.core.Instance;
 import weka.core.Instances;
 import weka.core.Option;
 import weka.core.UtilsPT;
-import weka.filters.Filter;
 import weka.filters.unsupervised.attribute.Remove;
 import weka.tools.GlobalInfoHandler;
 
@@ -43,6 +47,16 @@ public abstract class ClusterDrivenEnsembleAbstract extends ParallelIteratedSing
 	protected Remove removeFilter = new Remove();
 	
 	protected ZeroR defaultModel;
+	
+	/**
+	 * Combiner for class  soft outputs
+	 */
+	protected OutputCombiner classificationCombiner  = new MeanCombiner();
+	
+	/**
+	 * Combiner for regression outputs
+	 */
+	protected OutputCombinerNumClass regressionCombiner = new MeanCombinerNumClass();
 	
 	/**
 	 * 
@@ -77,10 +91,22 @@ public abstract class ClusterDrivenEnsembleAbstract extends ParallelIteratedSing
 		this.removeFilter.setAttributeIndicesArray(new int[] {classIndex});
 		this.removeFilter.setInputFormat(data);
 		this.removeFilter.setInvertSelection(false);
-		Instances filteredData = Filter.useFilter(data, this.removeFilter);
-		if(!this.m_DoNotCheckCapabilities)
-			this.clusterer.getCapabilities().testWithFail(filteredData);
-		this.clusterer.buildClusterer(filteredData);
+		
+	}
+	protected abstract double[] getWeights(Instance instance) throws Exception;
+	
+	@Override
+	public double[] distributionForInstance(Instance instance) throws Exception {
+		if(this.defaultModel!=null)
+			return this.defaultModel.distributionForInstance(instance);
+		double[] weights = this.getWeights(instance);
+		double[] distribution=null;
+		if(this.isClassNumeric) {
+			distribution = new double[] {this.regressionCombiner.getClass(m_Classifiers, instance, weights)};
+		}else {
+			distribution = this.classificationCombiner.getCombinedDistributionForInstance(m_Classifiers, instance, weights);
+		}
+		return distribution;
 	}
 
 
@@ -92,6 +118,16 @@ public abstract class ClusterDrivenEnsembleAbstract extends ParallelIteratedSing
 			      "\tThe Clusterer object to use"+
 		          "(default:" + SimpleKMeans.class.toGenericString() + ").\n",
 			      "CLU", 1, "-CLU"));
+		 
+		 newVector.addElement(new Option(
+			      "\tThe Classification combiner to use"+
+		          "(default:" + MeanCombiner.class.toGenericString() + ").\n",
+			      "CLAC", 1, "-CLAC"));
+		 
+		 newVector.addElement(new Option(
+			      "\tThe Regression combiner to use"+
+		          "(default:" + MeanCombiner.class.toGenericString() + ").\n",
+			      "REGC", 1, "-REGC"));
 		
 		 
 		 newVector.addAll(Collections.list(super.listOptions()));
@@ -102,6 +138,9 @@ public abstract class ClusterDrivenEnsembleAbstract extends ParallelIteratedSing
 	@Override
 	public void setOptions(String[] options) throws Exception {
 		this.setClusterer((Clusterer) UtilsPT.parseObjectOptions(options, "CLU", new SimpleKMeans(), Clusterer.class));
+		this.setClassificationCombiner((OutputCombiner) UtilsPT.parseObjectOptions(options, "CLAC", new MeanCombiner(), OutputCombiner.class));
+		this.setRegressionCombiner((OutputCombinerNumClass) UtilsPT.parseObjectOptions(options, "REGC", new MeanCombinerNumClass(), OutputCombinerNumClass.class));
+		
 		super.setOptions(options);
 	}
 
@@ -111,7 +150,13 @@ public abstract class ClusterDrivenEnsembleAbstract extends ParallelIteratedSing
 	    
 
 	    options.add("-CLU");
-	    options.add(UtilsPT.getClassAndOptions(this.clusterer));
+	    options.add(UtilsPT.getClassAndOptions(this.getClusterer()));
+	    
+	    options.add("-CLAC");
+	    options.add(UtilsPT.getClassAndOptions(this.getClassificationCombiner()));
+	    
+	    options.add("-REGC");
+	    options.add(UtilsPT.getClassAndOptions(this.getRegressionCombiner()));
 	    
 	    Collections.addAll(options, super.getOptions());
 	    
@@ -144,6 +189,8 @@ public abstract class ClusterDrivenEnsembleAbstract extends ParallelIteratedSing
 		return "Clusterer prototype to use";
 	}
 	
+	
+	
 	@Override
 	public void setNumIterations(int numIterations) {
 		super.setNumIterations(numIterations);
@@ -153,6 +200,42 @@ public abstract class ClusterDrivenEnsembleAbstract extends ParallelIteratedSing
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
+	}
+
+	/**
+	 * @return the classificationCombiner
+	 */
+	public OutputCombiner getClassificationCombiner() {
+		return this.classificationCombiner;
+	}
+
+	/**
+	 * @param classificationCombiner the classificationCombiner to set
+	 */
+	public void setClassificationCombiner(OutputCombiner classificationCombiner) {
+		this.classificationCombiner = classificationCombiner;
+	}
+	
+	public String classificationCombinerTipText() {
+		return "The Classification combiner to use";
+	}
+
+	/**
+	 * @return the regressionCombiner
+	 */
+	public OutputCombinerNumClass getRegressionCombiner() {
+		return this.regressionCombiner;
+	}
+
+	/**
+	 * @param regressionCombiner the regressionCombiner to set
+	 */
+	public void setRegressionCombiner(OutputCombinerNumClass regressionCombiner) {
+		this.regressionCombiner = regressionCombiner;
+	}
+	
+	public String regressionCombinerTipText(){
+		return "The regression combiner to use";
 	}
 
 }

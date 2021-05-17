@@ -19,7 +19,7 @@ import weka.core.WeightedInstancesHandler;
  * @version 1.11.0
  *
  */
-public class ClusterDrivenEnsembleHeteroClusters extends ClusterDrivenEnsembleAbstract {
+public class ClusterDrivenEnsembleHeteroClusters extends ClusterDrivenEnsembleHeteroClustersAbstract {
 
 	/**
 	 * 
@@ -82,23 +82,17 @@ public class ClusterDrivenEnsembleHeteroClusters extends ClusterDrivenEnsembleAb
 	}
 	
 	@Override
-	public double[] distributionForInstance(Instance instance) throws Exception {
-		if(this.defaultModel!=null)
-			return this.defaultModel.distributionForInstance(instance);
-		double[] distribution = null;
+	protected double[] getWeights(Instance instance)throws Exception {
 		this.removeFilter.input(instance);
 		Instance filteredInstance = this.removeFilter.output();
 		
 		double[] clustererResponse = this.clusterer.distributionForInstance(filteredInstance);
 		int maxClusterIdx = Utils.maxIndex(clustererResponse);
 		
-		if(this.isClassNumeric) {
-			distribution = new double[] {this.m_Classifiers[maxClusterIdx].classifyInstance(instance)};
-		}else {
-			distribution = this.m_Classifiers[maxClusterIdx].distributionForInstance(instance);
-		}
+		double[] weights = new double[this.m_Classifiers.length];
+		weights[maxClusterIdx] =1;
 		
-		return distribution;
+		return weights;
 	}
 	
 	@Override
@@ -159,6 +153,5 @@ public class ClusterDrivenEnsembleHeteroClusters extends ClusterDrivenEnsembleAb
 	public String globalInfo() {
 		return "Cluster driven ensemble with heterogeneous clusters (clusters containing multiple classes)";
 	}
-	
 
 }

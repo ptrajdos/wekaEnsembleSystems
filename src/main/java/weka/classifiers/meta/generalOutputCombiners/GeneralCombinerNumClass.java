@@ -11,7 +11,7 @@ import weka.core.Instance;
 /**
  * @author pawel trajdos
  * @since 1.1.1
- * @version 1.1.1
+ * @version 1.11.0
  *
  */
 public abstract class GeneralCombinerNumClass implements OutputCombinerNumClass, Serializable {
@@ -21,6 +21,8 @@ public abstract class GeneralCombinerNumClass implements OutputCombinerNumClass,
 	 * 
 	 */
 	private static final long serialVersionUID = -8725511799618036682L;
+	
+	private static double EPS=1E-10;
 
 	public void checkCompatibility(double[] predictions,Instance testInstance, double[] weights) throws Exception{
 		if (!testInstance.classAttribute().isNumeric())throw new Exception("The class is not a numeric one");
@@ -45,8 +47,11 @@ public abstract class GeneralCombinerNumClass implements OutputCombinerNumClass,
 	@Override
 	public double getClass(Classifier[] committee, Instance testInstance, double[] weights) throws Exception {
 		double[] outputs = new double[committee.length];
-		for(int c=0;c<committee.length;c++) 
-			outputs[c]=committee[c].classifyInstance(testInstance);
+		for(int c=0;c<committee.length;c++)
+			if(weights[c]>EPS)
+				outputs[c]=committee[c].classifyInstance(testInstance);
+			else
+				outputs[c]=0;
 		
 		return this.getClass(outputs, testInstance,weights);
 	}

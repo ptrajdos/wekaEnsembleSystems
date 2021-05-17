@@ -14,7 +14,7 @@ import weka.core.Utils;
 /**
  * @author pawel trajdos
  * @since 1.1.1
- * @version 1.4.0
+ * @version 1.11.0
  *
  */
 public abstract class GeneralCombiner implements OutputCombiner,Serializable, RevisionHandler {
@@ -23,6 +23,8 @@ public abstract class GeneralCombiner implements OutputCombiner,Serializable, Re
 	 * 
 	 */
 	private static final long serialVersionUID = 573687151292284645L;
+	
+	private static double EPS=1E-10;
 
 	/**
 	 * 
@@ -63,7 +65,7 @@ public abstract class GeneralCombiner implements OutputCombiner,Serializable, Re
 	 */
 	@Override
 	public String getRevision() {
-		return "1.3.1";
+		return "1.11.0";
 	}
 
 	/* (non-Javadoc)
@@ -85,9 +87,17 @@ public abstract class GeneralCombiner implements OutputCombiner,Serializable, Re
 	public double[] getCombinedDistributionForInstance(Classifier[] committee, Instance testInstance, double[] weights)
 			throws Exception {
 		int commSize = committee.length;
+		int numClasses = testInstance.numClasses();
 		double[][] predictions = new double[commSize][];
 		for(int c =0 ;c<commSize;c++) {
-			predictions[c] = committee[c].distributionForInstance(testInstance);
+			/**
+			 * Ignore classifiers with small weights
+			 */
+			if(weights[c]>EPS)
+				predictions[c] = committee[c].distributionForInstance(testInstance);
+			else {
+				predictions[c] = new double[numClasses];
+			}
 		}
 		
 		return this.getCombinedDistributionForInstance(predictions, testInstance, weights);
