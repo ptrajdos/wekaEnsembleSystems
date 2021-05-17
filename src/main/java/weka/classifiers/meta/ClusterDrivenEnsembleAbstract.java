@@ -7,7 +7,8 @@ import java.util.Collections;
 import java.util.Enumeration;
 import java.util.Vector;
 
-import weka.classifiers.ParallelIteratedSingleClassifierEnhancer;
+import weka.classifiers.Classifier;
+import weka.classifiers.SingleClassifierEnhancer;
 import weka.classifiers.meta.generalOutputCombiners.MeanCombiner;
 import weka.classifiers.meta.generalOutputCombiners.MeanCombinerNumClass;
 import weka.classifiers.meta.generalOutputCombiners.OutputCombiner;
@@ -33,7 +34,7 @@ import weka.tools.GlobalInfoHandler;
  * 
  *
  */
-public abstract class ClusterDrivenEnsembleAbstract extends ParallelIteratedSingleClassifierEnhancer implements GlobalInfoHandler, CapabilitiesHandler {
+public abstract class ClusterDrivenEnsembleAbstract extends SingleClassifierEnhancer implements GlobalInfoHandler, CapabilitiesHandler {
 
 	/**
 	 * 
@@ -47,6 +48,8 @@ public abstract class ClusterDrivenEnsembleAbstract extends ParallelIteratedSing
 	protected Remove removeFilter = new Remove();
 	
 	protected ZeroR defaultModel;
+	
+	protected Classifier[] m_Classifiers;
 	
 	/**
 	 * Combiner for class  soft outputs
@@ -63,36 +66,9 @@ public abstract class ClusterDrivenEnsembleAbstract extends ParallelIteratedSing
 	 */
 	public ClusterDrivenEnsembleAbstract() {
 		super();
-		try {
-			this.m_NumIterations = this.clusterer.numberOfClusters();
-		} catch (Exception e) {
-			this.m_NumIterations = this.defaultNumberOfIterations();
-		}
 	}
 	
-	@Override
-	public void buildClassifier(Instances data) throws Exception {
-		this.m_NumIterations = this.clusterer.numberOfClusters();
-		
-		if(data.numAttributes()==1 && data.classIndex()>=0) {
-			this.defaultModel = new ZeroR();
-			this.defaultModel.buildClassifier(data);
-			return;
-		}
-		
-		this.defaultModel=null;
-		
-		if(!this.m_DoNotCheckCapabilities)
-			 getCapabilities().testWithFail(data);
-		this.isClassNumeric = data.classAttribute().isNumeric();
-		super.buildClassifier(data);
-		
-		int classIndex = data.classIndex();
-		this.removeFilter.setAttributeIndicesArray(new int[] {classIndex});
-		this.removeFilter.setInputFormat(data);
-		this.removeFilter.setInvertSelection(false);
-		
-	}
+	
 	protected abstract double[] getWeights(Instance instance) throws Exception;
 	
 	@Override
@@ -102,9 +78,9 @@ public abstract class ClusterDrivenEnsembleAbstract extends ParallelIteratedSing
 		double[] weights = this.getWeights(instance);
 		double[] distribution=null;
 		if(this.isClassNumeric) {
-			distribution = new double[] {this.regressionCombiner.getClass(m_Classifiers, instance, weights)};
+			distribution = new double[] {this.regressionCombiner.getClass(this.m_Classifiers, instance, weights)};
 		}else {
-			distribution = this.classificationCombiner.getCombinedDistributionForInstance(m_Classifiers, instance, weights);
+			distribution = this.classificationCombiner.getCombinedDistributionForInstance(this.m_Classifiers, instance, weights);
 		}
 		return distribution;
 	}
@@ -190,17 +166,6 @@ public abstract class ClusterDrivenEnsembleAbstract extends ParallelIteratedSing
 	}
 	
 	
-	
-	@Override
-	public void setNumIterations(int numIterations) {
-		super.setNumIterations(numIterations);
-		if(this.clusterer instanceof NumberOfClustersRequestable)
-			try {
-				((NumberOfClustersRequestable) this.clusterer).setNumClusters(numIterations);
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-	}
 
 	/**
 	 * @return the classificationCombiner
