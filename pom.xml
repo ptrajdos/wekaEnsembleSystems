@@ -84,6 +84,12 @@
     </dependency>
 
     <dependency>
+        <groupId>com.github.ptrajdos</groupId>
+        <artifactId>WekaClustererPT</artifactId>
+        <version>[0.0.1,)</version>
+    </dependency>
+
+    <dependency>
     <groupId>nz.ac.waikato.cms.moa</groupId>
     <artifactId>moa</artifactId>
     <version>2020.07.1</version>

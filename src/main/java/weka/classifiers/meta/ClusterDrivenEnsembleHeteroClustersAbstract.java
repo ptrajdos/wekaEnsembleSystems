@@ -8,14 +8,17 @@ import java.util.Enumeration;
 import java.util.Vector;
 
 import weka.classifiers.AbstractClassifier;
-import weka.classifiers.Classifier;
 import weka.classifiers.rules.ZeroR;
+import weka.core.Capabilities;
+import weka.core.Capabilities.Capability;
 import weka.core.Instance;
 import weka.core.Instances;
 import weka.core.Option;
 import weka.core.Utils;
 import weka.core.WeightedInstancesHandler;
+import weka.filters.AllFilter;
 import weka.filters.Filter;
+import weka.filters.unsupervised.attribute.Remove;
 
 /**
  * @author pawel trajdos
@@ -35,6 +38,8 @@ public abstract class ClusterDrivenEnsembleHeteroClustersAbstract extends Cluste
 	protected Instances[] clusterRelatedSets;
 	
 	protected boolean weightedInstances=false;
+	
+	protected boolean[] inactive;
 
 	/**
 	 * 
@@ -46,7 +51,7 @@ public abstract class ClusterDrivenEnsembleHeteroClustersAbstract extends Cluste
 	@Override
 	public void buildClassifier(Instances data) throws Exception {
 		
-		if(data.numAttributes()==1 && data.classIndex()>=0) {
+		if( (data.numAttributes()==1 && data.classIndex()>=0) || data.numInstances()==0) {
 			this.defaultModel = new ZeroR();
 			this.defaultModel.buildClassifier(data);
 			return;
@@ -60,14 +65,28 @@ public abstract class ClusterDrivenEnsembleHeteroClustersAbstract extends Cluste
 		
 		
 		int classIndex = data.classIndex();
-		this.removeFilter.setAttributeIndicesArray(new int[] {classIndex});
-		this.removeFilter.setInputFormat(data);
-		this.removeFilter.setInvertSelection(false);
+		
+		Capabilities clustererCapabilities = this.clusterer.getCapabilities();
+		if(clustererCapabilities.handles(Capability.NO_CLASS)) {
+			Remove remFilter  = new Remove();
+			remFilter.setAttributeIndicesArray(new int[] {classIndex});
+			remFilter.setInputFormat(data);
+			remFilter.setInvertSelection(false);
+			
+			this.preClusterFilter = remFilter;
+			
+		}else {
+			AllFilter allFilter = new AllFilter();
+			allFilter.setInputFormat(data);
+			this.preClusterFilter = allFilter;
+		}
 		
 		
 		
 		
-		Instances filteredData = Filter.useFilter(data, this.removeFilter);
+		
+		
+		Instances filteredData = Filter.useFilter(data, this.preClusterFilter);
 		if(!this.m_DoNotCheckCapabilities)
 			this.clusterer.getCapabilities().testWithFail(filteredData);
 		this.clusterer.buildClusterer(filteredData);
@@ -76,8 +95,15 @@ public abstract class ClusterDrivenEnsembleHeteroClustersAbstract extends Cluste
 		
 		this.generateTrainData(data);
 		
+		this.inactive = new boolean[this.m_Classifiers.length];
+		
 		for(int c =0;c<this.m_Classifiers.length;c++) {
-			this.m_Classifiers[c].buildClassifier(this.clusterRelatedSets[c]);
+			if(this.clusterRelatedSets[c].numInstances() == 0 ) {
+				this.m_Classifiers[c] = new ZeroR();
+				this.inactive[c]=true;
+			}
+				this.m_Classifiers[c].buildClassifier(this.clusterRelatedSets[c]);
+			
 		}
 	}
 	
@@ -90,8 +116,8 @@ public abstract class ClusterDrivenEnsembleHeteroClustersAbstract extends Cluste
 			this.clusterRelatedSets[i] = new Instances(trainData, 0);
 		
 		for (Instance instance : trainData) {
-			this.removeFilter.input(instance);
-			Instance filteredInstance = this.removeFilter.output();
+			this.preClusterFilter.input(instance);
+			Instance filteredInstance = this.preClusterFilter.output();
 			double[] distribution = this.clusterer.distributionForInstance(filteredInstance);
 			if(this.weightedInstances && (this.m_Classifier instanceof WeightedInstancesHandler )) {
 				for(int i=0;i<distribution.length;i++) {

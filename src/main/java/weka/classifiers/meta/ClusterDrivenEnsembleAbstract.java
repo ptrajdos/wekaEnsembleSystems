@@ -15,14 +15,13 @@ import weka.classifiers.meta.generalOutputCombiners.OutputCombiner;
 import weka.classifiers.meta.generalOutputCombiners.OutputCombinerNumClass;
 import weka.classifiers.rules.ZeroR;
 import weka.clusterers.Clusterer;
-import weka.clusterers.NumberOfClustersRequestable;
 import weka.clusterers.SimpleKMeans;
 import weka.core.Capabilities;
 import weka.core.CapabilitiesHandler;
 import weka.core.Instance;
-import weka.core.Instances;
 import weka.core.Option;
 import weka.core.UtilsPT;
+import weka.filters.Filter;
 import weka.filters.unsupervised.attribute.Remove;
 import weka.tools.GlobalInfoHandler;
 
@@ -45,7 +44,7 @@ public abstract class ClusterDrivenEnsembleAbstract extends SingleClassifierEnha
 	
 	protected boolean isClassNumeric=false;
 	
-	protected Remove removeFilter = new Remove();
+	protected Filter preClusterFilter;
 	
 	protected ZeroR defaultModel;
 	

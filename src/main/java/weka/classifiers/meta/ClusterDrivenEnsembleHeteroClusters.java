@@ -10,6 +10,7 @@ import java.util.Vector;
 import weka.core.Instance;
 import weka.core.Option;
 import weka.core.Utils;
+import weka.core.UtilsPT;
 
 /**
  * @author pawel trajdos
@@ -40,10 +41,23 @@ public class ClusterDrivenEnsembleHeteroClusters extends ClusterDrivenEnsembleHe
 	
 	@Override
 	protected double[] getWeights(Instance instance)throws Exception {
-		this.removeFilter.input(instance);
-		Instance filteredInstance = this.removeFilter.output();
+		this.preClusterFilter.input(instance);
+		Instance filteredInstance = this.preClusterFilter.output();
+		this.preClusterFilter.batchFinished();
 		
 		double[] clustererResponse = this.clusterer.distributionForInstance(filteredInstance);
+		
+		for(int i=0;i<clustererResponse.length;i++) {
+			if(this.inactive[i])
+				clustererResponse[i]=0;
+		}
+		
+		double respSum = Utils.sum(clustererResponse);
+		if(!Utils.eq(respSum, 0.0))
+			Utils.normalize(clustererResponse);
+		else
+			clustererResponse = UtilsPT.softMax(clustererResponse);
+		
 		if(this.weightedOutput) {
 			return clustererResponse;
 		}
