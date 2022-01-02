@@ -22,7 +22,6 @@ import weka.core.Instance;
 import weka.core.Option;
 import weka.core.UtilsPT;
 import weka.filters.Filter;
-import weka.filters.unsupervised.attribute.Remove;
 import weka.tools.GlobalInfoHandler;
 
 /**

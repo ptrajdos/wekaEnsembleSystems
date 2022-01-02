@@ -11,17 +11,21 @@ import java.util.Vector;
 
 import weka.classifiers.Classifier;
 import weka.classifiers.rules.ZeroR;
+import weka.classifiers.trees.REPTree;
 import weka.core.Instance;
 import weka.core.Instances;
 import weka.core.Option;
 import weka.core.UtilsPT;
+import weka.filters.AllFilter;
 import weka.filters.Filter;
+import weka.filters.MultiFilter;
 import weka.filters.unsupervised.attribute.Remove;
+import weka.tools.SerialCopier;
 
 /**
  * @author pawel trajdos
  * @since 1.10.0
- * @version 1.10.0
+ * @version 1.11.1
  *
  */
 public class CustomizableBaggingClassifierRandomSubspace2 extends CustomizableBaggingClassifier2 {
@@ -35,6 +39,8 @@ public class CustomizableBaggingClassifierRandomSubspace2 extends CustomizableBa
 	protected double attributePercentage=0.5;
 	
 	protected Classifier defaultModel = null;
+	
+	protected Classifier tmpModel=null;
 	/**
 	 * @return the minNumberOfAttributes
 	 */
@@ -109,83 +115,119 @@ public class CustomizableBaggingClassifierRandomSubspace2 extends CustomizableBa
 		super.setOptions(options);
 	}
 	
-	protected int getNumberOfNonClassAttributes() {
-		if(this.m_data==null)
-			return 0;
-		
-		int classIdx = this.m_data.classIndex();
-		int numAtrrs = this.m_data.numAttributes();
-		int realAttrs =  numAtrrs + (classIdx>=0? -1:0);
-		
-		return realAttrs;
-	}
 	
-	protected int getNumberOfAttributesToSelect() {
-		if(this.m_data == null)
-			return this.minNumberOfAttributes;
-		
-		int realAttrs = getNumberOfNonClassAttributes();
-		int roundedPerc = (int)Math.ceil(realAttrs*this.attributePercentage);
-		int attrs2Select = Math.max(this.minNumberOfAttributes, roundedPerc);
-		
-		attrs2Select = attrs2Select>realAttrs? realAttrs: attrs2Select;
-		
-		return attrs2Select;
-	}
 	
-	protected Integer[] generateNonClassAttributeIndices() {
-		if(this.m_data == null)
-			return new Integer[0];
+	protected static class FilteredRemoveClassifier extends FilteredClassifier{
+
+		/**
+		 * For serialization puropses
+		 */
+		private static final long serialVersionUID = -1600342695813267823L;
 		
-		int numAttrs = this.m_data.numAttributes();
-		int classAttrIdx = this.m_data.classIndex();
-		int numNonClassAttrs = this.getNumberOfNonClassAttributes();
+		/**
+		 * Instances saved during the learning process
+		 */
+		protected Instances m_data;
 		
-		Integer[] indices = new Integer[numNonClassAttrs];
-		int counter=0;
-		for(int i=0;i<numAttrs;i++) {
-			if(i!=classAttrIdx) {
-				indices[counter++]=i+1; 
+		protected int minNumberOfAttributes=2;
+		protected double attributePercentage=0.5;
+		
+		public FilteredRemoveClassifier(int minNumberOfAttributes, double attributePercentage) {
+			this.minNumberOfAttributes = minNumberOfAttributes;
+			this.attributePercentage = attributePercentage;
+		}
+		
+		protected int getNumberOfNonClassAttributes() {
+			if(this.m_data==null)
+				return 0;
+			
+			int classIdx = this.m_data.classIndex();
+			int numAtrrs = this.m_data.numAttributes();
+			int realAttrs =  numAtrrs + (classIdx>=0? -1:0);
+			
+			return realAttrs;
+		}
+		
+		protected int getNumberOfAttributesToSelect() {
+			if(this.m_data == null)
+				return this.minNumberOfAttributes;
+			
+			int realAttrs = getNumberOfNonClassAttributes();
+			int roundedPerc = (int)Math.ceil(realAttrs*this.attributePercentage);
+			int attrs2Select = Math.max(this.minNumberOfAttributes, roundedPerc);
+			
+			attrs2Select = attrs2Select>realAttrs? realAttrs: attrs2Select;
+			
+			return attrs2Select;
+		}
+		
+		protected Integer[] generateNonClassAttributeIndices() {
+			if(this.m_data == null)
+				return new Integer[0];
+			
+			int numAttrs = this.m_data.numAttributes();
+			int classAttrIdx = this.m_data.classIndex();
+			int numNonClassAttrs = this.getNumberOfNonClassAttributes();
+			
+			Integer[] indices = new Integer[numNonClassAttrs];
+			int counter=0;
+			for(int i=0;i<numAttrs;i++) {
+				if(i!=classAttrIdx) {
+					indices[counter++]=i+1; 
+				}
 			}
+			
+			return indices;
+		}
+		
+		protected String randomSubSpaceString() {
+			Integer[] indices = this.generateNonClassAttributeIndices();
+			int subSpaceSize = this.getNumberOfAttributesToSelect();
+			int classIndex = this.m_data.classIndex() + 1;
+			
+			Random random = new Random(this.m_Seed);
+			
+		    Collections.shuffle(Arrays.asList(indices), random);
+		    StringBuffer sb = new StringBuffer("");
+		    for(int i = 0; i < subSpaceSize; i++) {
+		      sb.append(indices[i]+",");
+		    }
+		    sb.append(classIndex);
+		    
+		    if (getDebug())
+		      System.out.println("subSPACE = " + sb);
+
+		    return sb.toString();
+		  }
+		
+		protected Filter getSubSpaceFilter() throws Exception {
+			Remove rm = new Remove();
+		      rm.setOptions(new String[]{"-V", "-R", this.randomSubSpaceString()});
+			return rm;
+		}
+		
+		@Override
+		public void buildClassifier(Instances data) throws Exception {
+			this.m_data = new Instances(data);
+			this.setFilter(this.getSubSpaceFilter());
+			super.buildClassifier(data);
 		}
 		
 		
-		return indices;
 	}
 	
-	protected String randomSubSpaceString(int iteration) {
-		Integer[] indices = this.generateNonClassAttributeIndices();
-		int subSpaceSize = this.getNumberOfAttributesToSelect();
-		int classIndex = this.m_data.classIndex() + 1;
-		
-		Random random = new Random(this.m_Seed + iteration);
-		
-	    Collections.shuffle(Arrays.asList(indices), random);
-	    StringBuffer sb = new StringBuffer("");
-	    for(int i = 0; i < subSpaceSize; i++) {
-	      sb.append(indices[i]+",");
-	    }
-	    sb.append(classIndex);
-	    
-	    if (getDebug())
-	      System.out.println("subSPACE = " + sb);
-
-	    return sb.toString();
-	  }
-	
-	protected Filter getSubSpaceFilter(int iteration) throws Exception {
-		Remove rm = new Remove();
-	      rm.setOptions(new String[]{"-V", "-R", this.randomSubSpaceString(iteration)});
-		return rm;
-	}
 	
 	@Override
 	public void buildClassifier(Instances data) throws Exception {
 		
-		if(!this.m_DoNotCheckCapabilities)
-			this.getCapabilities().testWithFail(data);
-		
 		this.m_data = new Instances(data);
+		
+		if(this.tmpModel !=null) {
+			this.m_Classifier = this.tmpModel;
+		}else {
+			this.tmpModel = this.m_Classifier;
+		}
+			
 		
 		if(this.m_data.numAttributes() == 1) {
 			this.defaultModel = new ZeroR();
@@ -194,23 +236,19 @@ public class CustomizableBaggingClassifierRandomSubspace2 extends CustomizableBa
 		}
 		this.defaultModel=null;
 		
+		FilteredRemoveClassifier tmpFiltered = new FilteredRemoveClassifier(this.minNumberOfAttributes, this.attributePercentage);
+		Classifier tmpClassifier = (Classifier) SerialCopier.makeCopy(this.m_Classifier);
+		
+		tmpFiltered.setClassifier(tmpClassifier);
+		//tmpFiltered.setClassifier(new REPTree());
+		this.setClassifier(tmpFiltered);
+	
+		
+		if(!this.m_DoNotCheckCapabilities)
+			this.getCapabilities().testWithFail(data);
+		
+		
 		super.buildClassifier(data);
-		
-		this.m_data = new Instances(data);
-		
-		Filter tmpRem = null;
-		FilteredClassifier updFilteredClassifier = null;
-		for(int i=0;i<this.m_Classifiers.length;i++) {
-			tmpRem =  getSubSpaceFilter(i);
-			updFilteredClassifier = new FilteredClassifier();
-			updFilteredClassifier.setClassifier(this.m_Classifiers[i]);
-			updFilteredClassifier.setFilter(tmpRem);
-			this.m_Classifiers[i] = updFilteredClassifier;
-			
-		}
-		
-		
-		buildClassifiers();
 	}
 @Override
 public double[] distributionForInstance(Instance instance) throws Exception {
