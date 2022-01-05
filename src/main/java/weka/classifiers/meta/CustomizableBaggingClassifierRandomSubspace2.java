@@ -11,21 +11,18 @@ import java.util.Vector;
 
 import weka.classifiers.Classifier;
 import weka.classifiers.rules.ZeroR;
-import weka.classifiers.trees.REPTree;
 import weka.core.Instance;
 import weka.core.Instances;
 import weka.core.Option;
 import weka.core.UtilsPT;
-import weka.filters.AllFilter;
 import weka.filters.Filter;
-import weka.filters.MultiFilter;
 import weka.filters.unsupervised.attribute.Remove;
 import weka.tools.SerialCopier;
 
 /**
  * @author pawel trajdos
  * @since 1.10.0
- * @version 1.11.1
+ * @version 1.11.0
  *
  */
 public class CustomizableBaggingClassifierRandomSubspace2 extends CustomizableBaggingClassifier2 {

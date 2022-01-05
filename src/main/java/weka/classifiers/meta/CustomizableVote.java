@@ -71,7 +71,7 @@ public class CustomizableVote extends Vote {
 	 */
 	@Override
 	public String[] getOptions() {
-Vector<String> options = new Vector<String>();
+		Vector<String> options = new Vector<String>();
 	    
 
 	    options.add("-C");

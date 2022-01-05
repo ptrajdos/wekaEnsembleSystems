@@ -3,8 +3,6 @@
  */
 package weka.classifiers.tools;
 
-import java.util.Random;
-
 import weka.classifiers.AbstractClassifier;
 import weka.core.Instance;
 import weka.core.Instances;
