@@ -42,6 +42,38 @@ public class RandomSubSpaceClassifierTunerTest extends SimpleSingleClassifierEnh
 			//Nothing to do
 		}
 	}
+	
+	public void testTunedParameters() {
+		
+		double beta=0.5;
+		double k = 2.0;
+		int numAttrs=1000;
+		int numInsts=100;
+		
+		RandomSubSpaceClassifierTuner tuner = (RandomSubSpaceClassifierTuner) this.getClassifier();
+		tuner.setAttribFraction(beta);
+		tuner.setOverproductRate(k);
+		
+		
+		RandomDataGenerator gen = new RandomDataGenerator();
+		gen.setNumNumericAttributes(numAttrs);
+		gen.setNumObjects(numInsts);
+		
+		Instances data = gen.generateData();
+		
+		try {
+			tuner.buildClassifier(data);
+			
+			RandomSubSpace rssClassifier = (RandomSubSpace) tuner.getClassifier();
+			assertEquals("Attrib fraction test",beta*numInsts/numAttrs, rssClassifier.getSubSpaceSize(), 1E-3);
+			assertEquals("Overproduce rate",numInsts*k/beta, rssClassifier.getNumIterations(), 1E-3);
+			
+			
+		} catch (Exception e) {
+			fail("An exception has been caught: " + e);
+		}
+		
+	}
 
 
 }

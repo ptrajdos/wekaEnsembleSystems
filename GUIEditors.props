@@ -5,3 +5,4 @@ weka.classifiers.meta.generalOutputCombiners.OutputCombiner=weka.gui.GenericObje
 weka.classifiers.meta.generalOutputCombiners.OutputCombinerNumClass=weka.gui.GenericObjectEditor
 weka.classifiers.meta.cvParameterSelectionCustomizable.QualityCalculator=weka.gui.GenericObjectEditor
 weka.classifiers.meta.distrNormalizer.INormalizer=weka.gui.GenericObjectEditor
+weka.classifiers.meta.generalOutputCombiners.weightcreators.IWeightCreator=weka.gui.GenericObjectEditor
