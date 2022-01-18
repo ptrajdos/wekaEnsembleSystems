@@ -1,5 +1,6 @@
 package weka.classifiers.meta.generalOutputCombiners.weightcreators;
 
+import java.util.Arrays;
 import java.util.Random;
 
 import junit.framework.TestCase;
@@ -41,6 +42,10 @@ public abstract class IWeightCreatorTest extends TestCase {
 				assertTrue("Weights Length", weights.length == models[m]);
 				this.checkWeights(weights);
 				
+				double[][] uniformPredictions = this.createUniformPredictions(models[m], classes[c]);
+				weights = creator.createWeights(uniformPredictions, tmpInstance);
+				assertTrue("Weights Length", weights.length == models[m]);
+				this.checkWeights(weights);
 			}
 		}
 		
@@ -78,6 +83,17 @@ public abstract class IWeightCreatorTest extends TestCase {
 		return predictions;
 	}
 	
+	double[][] createUniformPredictions(int numModels, int numClasses){
+		double[][] predictions = new double[numModels][numClasses];
+		
+		for(int i=0;i<numModels;i++) {
+			Arrays.fill(predictions[i], 1.0);
+			Utils.normalize(predictions[i]);
+		}
+		
+		return predictions;
+	}
+	
 	public void testSerialization() {
 		IWeightCreator creator = this.getWeightCreator();
 		assertTrue("Serializations" , SerializationChecker.checkSerializationCopy(creator));
@@ -91,6 +107,7 @@ public abstract class IWeightCreatorTest extends TestCase {
 			OptionHandler creat = (OptionHandler) creator;
 			OptionHandlerChecker.checkOptions(creat);
 			WekaGOEChecker checker = new WekaGOEChecker();
+			checker.setObject(creat);
 			assertTrue("Tool Tips test",checker.checkToolTips());
 			assertTrue("Tool Tips call test",checker.checkToolTipsCall());
 		}

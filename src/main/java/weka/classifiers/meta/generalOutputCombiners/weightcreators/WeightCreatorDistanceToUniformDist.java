@@ -43,9 +43,17 @@ public class WeightCreatorDistanceToUniformDist implements IWeightCreator, Seria
 		int numModels = predictions.length;
 		
 		double[] weights = new double[numModels];
+		double weightSum=0;
 		
 		for(int i=0;i<numModels;i++) {
 			weights[i] = this.distCalculator.calculateDistance(uniformOutput, predictions[i]);
+			weightSum += weights[i];
+		}
+		
+		if(Utils.eq(weightSum, 0.0)) {
+			Arrays.fill(weights, 0.0);
+			weights[0]=1.0;
+			return weights;
 		}
 		
 		Utils.normalize(weights);
