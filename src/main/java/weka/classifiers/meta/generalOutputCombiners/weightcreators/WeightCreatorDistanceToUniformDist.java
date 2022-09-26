@@ -8,7 +8,6 @@ import java.util.Arrays;
 import java.util.Enumeration;
 import java.util.Vector;
 
-import weka.classifiers.meta.generalOutputCombiners.MeanCombiner;
 import weka.core.Instance;
 import weka.core.Option;
 import weka.core.OptionHandler;
