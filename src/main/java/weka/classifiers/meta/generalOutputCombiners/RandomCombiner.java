@@ -13,7 +13,7 @@ import weka.core.Utils;
 /**
  * @author pawel trajdos
  * @since 1.6.0
- * @version 1.6.0
+ * @version 1.13.0
  *
  */
 public class RandomCombiner extends GeneralCombiner implements Randomizable{
@@ -47,6 +47,10 @@ public class RandomCombiner extends GeneralCombiner implements Randomizable{
 	@Override
 	public int getSeed() {
 		return this.seed;
+	}
+	
+	public String seedTipText() {
+		return "Seed to use with the combiner.";
 	}
 
 }

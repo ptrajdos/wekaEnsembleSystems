@@ -2,6 +2,8 @@ package weka.classifiers.meta.generalOutputCombiners;
 
 import java.util.Arrays;
 
+import weka.classifiers.Classifier;
+import weka.classifiers.trees.J48;
 import weka.core.Instance;
 import weka.core.Instances;
 import weka.core.RevisionHandler;
@@ -81,6 +83,35 @@ public abstract class GeneralCombinerTest extends OutputCombinerTest {
 			
 			
 		}
+	}
+	
+	public void testParallelPredictions() {
+		GeneralCombiner comb = (GeneralCombiner) this.getCombiner();
+		comb.setNumExecutionSlots(5);
+		
+		RandomDataGenerator gen = new RandomDataGenerator();
+		Instances data = gen.generateData();
+		Instance testInstance = data.get(0);
+		
+		int N = 10;
+		Classifier[] classifiers = new Classifier[N];
+		for(int i=0;i<classifiers.length;i++) {
+			classifiers[i] = new J48();
+			try {
+				classifiers[i].buildClassifier(data);
+			} catch (Exception e) {
+				fail("An exception has been caught: " + e.getMessage());
+			}
+		}
+		
+		try {
+			double[] distrib = comb.getCombinedDistributionForInstance(classifiers, testInstance);
+			assertTrue("Distribution properties", DistributionChecker.checkDistribution(distrib));
+		} catch (Exception e) {
+			fail("An exception has been caught: " + e.getMessage());
+		}
+		
+		
 	}
 	
 }

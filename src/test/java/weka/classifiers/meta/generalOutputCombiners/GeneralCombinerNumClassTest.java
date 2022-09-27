@@ -7,9 +7,12 @@ import weka.classifiers.Classifier;
 import weka.classifiers.functions.LinearRegression;
 import weka.core.Instance;
 import weka.core.Instances;
+import weka.core.OptionHandler;
 import weka.core.Utils;
 import weka.tools.SerialCopier;
 import weka.tools.data.RandomDataGenerator;
+import weka.tools.tests.OptionHandlerChecker;
+import weka.tools.tests.WekaGOEChecker;
 
 public abstract class GeneralCombinerNumClassTest extends TestCase {
 
@@ -142,4 +145,60 @@ public abstract class GeneralCombinerNumClassTest extends TestCase {
 		
 		
 	}
+	
+	public void testOptions() {
+		OutputCombinerNumClass comb = this.getCombiner();
+		
+		if(comb instanceof OptionHandler) {
+			OptionHandler hand = (OptionHandler) comb;
+			OptionHandlerChecker.checkOptions(hand);
+			
+			WekaGOEChecker goe = new WekaGOEChecker();
+			goe.setObject(hand);
+			
+			
+			assertTrue("Check tooltips",goe.checkToolTips());
+			assertTrue("Check tooltips call",goe.checkToolTipsCall());
+			
+		}
+	}
+	
+	public void testParallelPredictions() {
+		
+		RandomDataGenerator gen = new RandomDataGenerator();
+		gen.setAddClassAttrib(false);
+		gen.setNumNominalAttributes(0);
+		Instances data = gen.generateData();
+		data.setClassIndex(0);
+		Instance testInstance = data.get(0);
+		
+		int N = 10;
+		
+		Classifier[] committee  = new Classifier[N];
+		
+		for(int i=0;i<committee.length;i++)
+			committee[i] = new LinearRegression();
+		
+		
+		double[] weights = new double[committee.length];
+		Arrays.fill(weights, 1.0);
+		
+		
+		GeneralCombinerNumClass comb = (GeneralCombinerNumClass) this.getCombiner();
+		comb.setNumExecutionSlots(5);
+		
+		
+		try {
+			for (Classifier classifier : committee) {
+				classifier.buildClassifier(data);
+			}
+			double classVal = comb.getClass(committee, testInstance);
+			classVal = comb.getClass(committee, testInstance, weights);
+		} catch (Exception e) {
+			fail("Class combination. Exception has been caught: " + e.toString());
+		}
+		
+	}
+	
+	
 }

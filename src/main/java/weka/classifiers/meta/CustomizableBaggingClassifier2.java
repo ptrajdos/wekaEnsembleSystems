@@ -79,7 +79,7 @@ public class CustomizableBaggingClassifier2 extends Bagging {
 	@Override
 	public String[] getOptions() {
 		
-Vector<String> options = new Vector<String>();
+		Vector<String> options = new Vector<String>();
 	    
 
 	    options.add("-CCL");
