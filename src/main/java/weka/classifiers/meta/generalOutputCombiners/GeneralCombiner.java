@@ -115,6 +115,7 @@ public abstract class GeneralCombiner implements OutputCombiner,Serializable, Re
 		}else {
 			int numCores = (this.numExecutionSlots <= 0) ? Runtime.getRuntime().availableProcessors(): this.numExecutionSlots;
 			ExecutorService executorPool = Executors.newFixedThreadPool(numCores);
+			
 
 			final CountDownLatch doneSignal = new CountDownLatch(commSize);
 			final Instance testInstancePass = testInstance;
@@ -205,7 +206,7 @@ public abstract class GeneralCombiner implements OutputCombiner,Serializable, Re
 		Vector<String> options = new Vector<String>();
 
 	    options.add("-ES");
-	    options.add(UtilsPT.getClassAndOptions( this.getNumExecutionSlots() ));
+	    options.add( "" +  this.getNumExecutionSlots() );
 	    
 	    return options.toArray(new String[0]);
 
