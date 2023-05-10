@@ -11,6 +11,7 @@ import weka.core.Instance;
 import weka.core.Instances;
 import weka.tools.data.RandomDataGenerator;
 import weka.tools.tests.DistributionChecker;
+import weka.tools.tests.SerializationChecker;
 import weka.tools.tests.WekaGOEChecker;
 
 public class MultipleClassifiersCombinerWithValidationSetTest extends AbstractClassifierTest {
@@ -89,6 +90,10 @@ public class MultipleClassifiersCombinerWithValidationSetTest extends AbstractCl
 		checkSplits(comb, 10, 0.0);
 		checkSplits(comb, 10, 1.0);
 		checkSplits(comb, 10, 0.5);
+	}
+
+	public void testSerialization(){
+	  assertTrue("Serialization check", SerializationChecker.checkSerializationCopy(this.getClassifier()));
 	}
 	
 	public void checkSplits(MultipleClassifiersCombinerWithValidationSet comb, int numInstances, double splitFactor) {
