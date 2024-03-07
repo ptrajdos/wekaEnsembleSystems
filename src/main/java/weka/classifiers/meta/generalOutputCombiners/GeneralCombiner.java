@@ -157,6 +157,10 @@ public abstract class GeneralCombiner implements OutputCombiner,Serializable, Re
 
 	public void normalizeOutput(double[] output){
 		if(Utils.eq(Utils.sum(output), 0)){
+			double[] normalized = UtilsPT.softMax(output);
+			for(int i=0;i<output.length;i++)
+				output[i] = normalized[i];
+			
 			return;
 		}
 		Utils.normalize(output);
